@@ -1,0 +1,135 @@
+package com.edward.calculoapi.services;
+
+import com.edward.calculoapi.database.dto.requests.CreateAccountRequest;
+import com.edward.calculoapi.database.dto.requests.LogInRequest;
+import com.edward.calculoapi.database.dto.requests.TokenRefreshRequest;
+import com.edward.calculoapi.database.dto.responses.LogInResponse;
+import com.edward.calculoapi.database.dto.responses.MessageResponse;
+import com.edward.calculoapi.database.dto.responses.TokenRefreshResponse;
+import com.edward.calculoapi.exceptions.EmailInUseException;
+import com.edward.calculoapi.exceptions.RoleNotValidException;
+import com.edward.calculoapi.exceptions.TokenRefreshException;
+import com.edward.calculoapi.models.ERole;
+import com.edward.calculoapi.models.RefreshToken;
+import com.edward.calculoapi.models.Role;
+import com.edward.calculoapi.models.User;
+import com.edward.calculoapi.database.repositories.RoleRepository;
+import com.edward.calculoapi.database.repositories.UserRepository;
+import com.edward.calculoapi.security.jwt.JwtUtils;
+import com.edward.calculoapi.security.services.RefreshTokenService;
+import com.edward.calculoapi.security.services.UserDetailsImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+public class UserAuthService {
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    RefreshTokenService refreshTokenService;
+
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
+
+    @Autowired
+    JwtUtils jwtUtils;
+
+    public LogInResponse loginUser(@Valid @RequestBody LogInRequest loginRequest){
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        return new LogInResponse(jwt,
+                refreshToken.getToken(),
+                userDetails.getId(),
+                userDetails.getFirstName(),
+                userDetails.getEmail(),
+                roles);
+    }
+
+    public MessageResponse createUserAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest){
+        if (userRepository.existsByEmail(createAccountRequest.getEmail())) {
+           throw new EmailInUseException("Email already in use");
+        }
+
+        User user = new User(
+                createAccountRequest.getFirstName(),
+                createAccountRequest.getFirstName(),
+                createAccountRequest.getEmail(),
+                encoder.encode(createAccountRequest.getPassword())
+                );
+
+        user.setRoles(setRoleForUser(createAccountRequest));
+        return new MessageResponse("Created account for user");
+    }
+
+    public TokenRefreshResponse loginWithRefresh(@Valid @RequestBody TokenRefreshRequest request){
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtUtils.generateJwtFromEmail(user.getEmail());
+                    return new TokenRefreshResponse(token, requestRefreshToken);
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token is not in database!"));
+    }
+
+    private Set<Role> setRoleForUser(CreateAccountRequest createAccountRequest){
+        Set<Role> roles = new HashSet<>();
+
+        if(createAccountRequest.getRoles().contains("user")) {
+            Role adminRole = roleRepository
+                    .findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RoleNotValidException("This is not a valid role"));
+            roles.add(adminRole);
+        }
+
+        return roles;
+    }
+
+    private Set<Role> setAdminRoleForUser(CreateAccountRequest createAccountRequest){
+        Set<Role> roles = new HashSet<>();
+
+        if(createAccountRequest.getRoles().contains("admin")) {
+            Role adminRole = roleRepository
+                    .findByName(ERole.ROLE_ADMIN)
+                    .orElseThrow(() -> new RoleNotValidException("This is not a valid role"));
+            roles.add(adminRole);
+        }
+
+        return roles;
+    }
+}
