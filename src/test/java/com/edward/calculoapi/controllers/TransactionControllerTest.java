@@ -128,7 +128,7 @@ public class TransactionControllerTest {
         var user = mockUserFactory.makeMockUser();
         Transaction transaction = mockTransactionFactory.makeTransaction(user.getId());
 
-        this.mockMvc.perform(delete("api/v1/transactions/"+transaction.getId()).with(user(user)))
+        this.mockMvc.perform(delete("/api/v1/transactions/"+transaction.getId()).with(user(user)))
                 .andExpect(status().isOk());
     }
 
@@ -138,11 +138,11 @@ public class TransactionControllerTest {
         var user = mockUserFactory.makeMockUser();
         Transaction transaction = mockTransactionFactory.makeTransaction(user.getId());
 
-        this.mockMvc.perform(delete("api/v1/transactions/"+transaction.getId()).with(user(user)))
+        this.mockMvc.perform(get("/api/v1/transactions/"+transaction.getId()).with(user(user)))
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        MockMvcResultMatchers.jsonPath("$.id", notNullValue())
+                        MockMvcResultMatchers.jsonPath("$.Transaction.id", notNullValue())
                 );
     }
 

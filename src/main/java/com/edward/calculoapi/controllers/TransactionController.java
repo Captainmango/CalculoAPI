@@ -80,4 +80,21 @@ public class TransactionController {
         return ResponseEntity.accepted().body(transaction);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @GetMapping(path = "/transactions/{id}")
+    public ResponseEntity<?> getTransactionForUser (
+            @PathVariable long id
+    ) {
+        Transaction transaction = transactionService.getTransactionForUser(id);
+        return ResponseEntity.ok().body(transaction);
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @DeleteMapping(path = "/transactions/{id}")
+    public ResponseEntity<?> deleteTransactionForUser (
+            @PathVariable long id
+    ) {
+        return transactionService.deleteTransactionForUser(id);
+    }
+
 }

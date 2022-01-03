@@ -11,6 +11,7 @@ import com.edward.calculoapi.models.*;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +75,25 @@ public class TransactionCRUDService {
             transaction.setCategories(setCategoriesForTransaction(updateTransactionRequest.getCategories()));
 
         return transactionRepository.saveAndFlush(transaction);
+    }
+
+    public Transaction getTransactionForUser(long id)
+    {
+        return transactionRepository.findById(id).orElseThrow();
+    }
+
+    public ResponseEntity<?> deleteTransactionForUser(long id)
+    {
+        UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
+        User user = userRepository.findById(currentUser.getId()).orElseThrow();
+        Transaction transaction = transactionRepository.findById(id).orElseThrow();
+
+        if (transaction.getUser().getId() != user.getId()) {
+            return ResponseEntity.badRequest().body("Transaction not deleted");
+        }
+
+        transactionRepository.delete(transaction);
+        return ResponseEntity.ok().body("Transaction with id " + transaction.getId() + " has been deleted");
     }
 
     private Set<Category> setCategoriesForTransaction(Set<String> categories)
