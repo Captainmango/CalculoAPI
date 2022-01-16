@@ -23,8 +23,7 @@ public class UserAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody LogInRequest logInRequest) {
-        LogInResponse user = userAuthService.loginUser(logInRequest);
-        return ResponseEntity.ok(user);
+        return userAuthService.loginUser(logInRequest);
     }
 
     @PostMapping("/register")
@@ -36,8 +35,7 @@ public class UserAuthController {
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> loginWithRefresh(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
-        TokenRefreshResponse token = userAuthService.loginWithRefresh(tokenRefreshRequest);
-        return ResponseEntity.ok(token);
+        return userAuthService.loginWithRefresh(tokenRefreshRequest);
     }
 
 }

@@ -6,7 +6,6 @@ import com.edward.calculoapi.models.Expense;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import com.edward.calculoapi.services.ExpenseCRUDService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

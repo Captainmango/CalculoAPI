@@ -1,41 +1,25 @@
 package com.edward.calculoapi.api.dto.responses;
 
+import com.edward.calculoapi.models.RefreshToken;
+
 import java.util.List;
 
 public class LogInResponse {
 
-    private String token;
-    private String refreshToken;
-    private String type = "Bearer";
     private Long id;
     private String firstName;
     private String email;
     private List<String> roles;
+    private String refreshToken;
 
-    public LogInResponse(String accessToken, String refreshToken, Long id, String firstName, String email, List<String> roles) {
-        this.token = accessToken;
-        this.refreshToken = refreshToken;
+    public LogInResponse(Long id, String firstName, String email, List<String> roles, String refreshToken) {
         this.id = id;
         this.firstName = firstName;
         this.email = email;
         this.roles = roles;
+        this.refreshToken = refreshToken;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public Long getId() {
         return id;

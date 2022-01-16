@@ -18,6 +18,9 @@ import com.edward.calculoapi.security.jwt.JwtUtils;
 import com.edward.calculoapi.security.services.RefreshTokenService;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
@@ -54,25 +58,29 @@ public class UserAuthService {
     @Autowired
     JwtUtils jwtUtils;
 
-    public LogInResponse loginUser(@Valid @RequestBody LogInRequest loginRequest){
+    public ResponseEntity<LogInResponse> loginUser(@Valid @RequestBody LogInRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(authentication);
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        return new LogInResponse(jwt,
-                refreshToken.getToken(),
-                userDetails.getId(),
-                userDetails.getFirstName(),
-                userDetails.getEmail(),
-                roles);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(
+                new LogInResponse(
+                        userDetails.getId(),
+                        userDetails.getFirstName(),
+                        userDetails.getEmail(),
+                        roles,
+                        refreshToken.getToken()
+                ));
     }
 
     public User createUserAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest){
@@ -82,7 +90,7 @@ public class UserAuthService {
 
         User user = new User(
                 createAccountRequest.getFirstName(),
-                createAccountRequest.getFirstName(),
+                createAccountRequest.getLastName(),
                 createAccountRequest.getEmail(),
                 encoder.encode(createAccountRequest.getPassword())
                 );
@@ -91,15 +99,19 @@ public class UserAuthService {
         return userRepository.save(user);
     }
 
-    public TokenRefreshResponse loginWithRefresh(@Valid @RequestBody TokenRefreshRequest request){
-        String requestRefreshToken = request.getRefreshToken();
+    public ResponseEntity<?> loginWithRefresh(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest){
+        String requestRefreshToken = tokenRefreshRequest.getRefreshToken();
 
         return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String token = jwtUtils.generateJwtFromEmail(user.getEmail());
-                    return new TokenRefreshResponse(token, requestRefreshToken);
+                    ResponseCookie token = jwtUtils.generateJwtCookieFromEmail(user.getEmail());
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.SET_COOKIE, token.toString())
+                            .body(new TokenRefreshResponse(
+                                    requestRefreshToken
+                            ));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));

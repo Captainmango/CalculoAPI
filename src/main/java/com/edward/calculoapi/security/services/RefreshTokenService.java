@@ -6,10 +6,15 @@ import com.edward.calculoapi.exceptions.TokenRefreshException;
 import com.edward.calculoapi.models.RefreshToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,6 +51,8 @@ public class RefreshTokenService {
             throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signin request");
         }
 
+        token.setExpiryDate(Instant.now().plus(1, ChronoUnit.DAYS));
+        refreshTokenRepository.save(token);
         return token;
     }
 
