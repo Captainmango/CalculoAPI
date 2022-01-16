@@ -2,7 +2,7 @@ package com.edward.calculoapi.database.seeders;
 
 import com.edward.calculoapi.database.repositories.CategoryRepository;
 import com.edward.calculoapi.database.repositories.RoleRepository;
-import com.edward.calculoapi.database.repositories.TransactionRepository;
+import com.edward.calculoapi.database.repositories.ExpenseRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.exceptions.RoleNotValidException;
 import com.edward.calculoapi.models.*;
@@ -12,7 +12,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.SecondaryTable;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -27,7 +26,7 @@ public class UserSeeder implements CommandLineRunner {
     CategoryRepository categoryRepository;
 
     @Autowired
-    TransactionRepository transactionRepository;
+    ExpenseRepository expenseRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -76,14 +75,14 @@ public class UserSeeder implements CommandLineRunner {
             categoryRepository.saveAll(categories);
         }
 
-        if (transactionRepository.count() == 0) {
+        if (expenseRepository.count() == 0) {
             User user = userRepository.findById(1L).orElseThrow();
             for (int i = 0; i<=10; i++) {
-                Transaction transaction = new Transaction(faker.food().fruit(),
+                Expense expense = new Expense(faker.food().fruit(),
                         faker.gameOfThrones().quote(),
                         (float) faker.number().randomDouble(2,5,15),
                         user);
-                transactionRepository.save(transaction);
+                expenseRepository.save(expense);
             }
         }
     }

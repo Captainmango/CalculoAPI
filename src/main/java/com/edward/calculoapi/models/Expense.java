@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity(name="transaction")
 @Table(name="transactions")
-public class Transaction {
+public class Expense {
 
     @Id
     @GeneratedValue
@@ -57,14 +57,14 @@ public class Transaction {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    public Transaction(String title, String notes, float total,  User user) {
+    public Expense(String title, String notes, float total, User user) {
         this.title = title;
         this.notes = notes;
         this.total = total;
         this.user = user;
     }
 
-    public Transaction() {
+    public Expense() {
     }
 
     public long getId() {

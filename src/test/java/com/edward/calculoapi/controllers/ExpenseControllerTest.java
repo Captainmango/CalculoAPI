@@ -5,10 +5,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.edward.calculoapi.database.dto.requests.CreateTransactionRequest;
-import com.edward.calculoapi.database.dto.requests.UpdateTransactionRequest;
-import com.edward.calculoapi.models.Transaction;
-import com.edward.calculoapi.utils.MockTransactionFactory;
+import com.edward.calculoapi.database.dto.requests.CreateExpenseRequest;
+import com.edward.calculoapi.database.dto.requests.UpdateExpenseRequest;
+import com.edward.calculoapi.models.Expense;
+import com.edward.calculoapi.utils.MockExpenseFactory;
 import com.edward.calculoapi.utils.MockUserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -27,7 +27,7 @@ import java.util.Set;
 @AutoConfigureMockMvc
 @SpringBootTest
 @TestPropertySource(locations = "/application.properties")
-public class TransactionControllerTest {
+public class ExpenseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,13 +36,13 @@ public class TransactionControllerTest {
     private MockUserFactory mockUserFactory;
 
     @Autowired
-    private MockTransactionFactory mockTransactionFactory;
+    private MockExpenseFactory mockExpenseFactory;
 
     @WithMockUser(roles = {"ADMIN"})
     @Test
-    public void testItCanGetAllTransactionsIfUserIsAnAdmin() throws Exception
+    public void testItCanGetAllExpensesIfUserIsAnAdmin() throws Exception
     {
-        this.mockMvc.perform(get("/api/v1/admin/transactions")).andExpectAll(
+        this.mockMvc.perform(get("/api/v1/admin/expenses")).andExpectAll(
             status().isOk(),
             content().contentType(MediaType.APPLICATION_JSON),
             MockMvcResultMatchers.jsonPath("$", notNullValue())
@@ -54,17 +54,17 @@ public class TransactionControllerTest {
     {
         var user = mockUserFactory.makeMockUser();
 
-        this.mockMvc.perform(get("/api/v1/admin/transactions").with(user(user))).andExpect(
+        this.mockMvc.perform(get("/api/v1/admin/expenses").with(user(user))).andExpect(
                 status().isForbidden()
         );
     }
 
     @Test
-    public void testItCanGetAUsersTransactions() throws Exception
+    public void testItCanGetAUsersExpenses() throws Exception
     {
         var user = mockUserFactory.makeMockUser();
 
-        this.mockMvc.perform(get("/api/v1/transactions").with(user(user))).andExpectAll(
+        this.mockMvc.perform(get("/api/v1/expenses").with(user(user))).andExpectAll(
                 status().isOk(),
                 content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$", notNullValue())
@@ -72,21 +72,21 @@ public class TransactionControllerTest {
     }
 
     @Test
-    public void testItCanCreateATransaction() throws Exception
+    public void testItCanCreateAnExpense() throws Exception
     {
         var user = mockUserFactory.makeMockUser();
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-        CreateTransactionRequest request =
-                new CreateTransactionRequest(
+        CreateExpenseRequest request =
+                new CreateExpenseRequest(
                         "Test",
                         "this is a test",
                         42,
                         Set.of("PERSONAL"));
 
         String requestJson = writer.writeValueAsString(request);
-        this.mockMvc.perform(post("/api/v1/transactions").with(user(user))
+        this.mockMvc.perform(post("/api/v1/expenses").with(user(user))
                 .content(requestJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
@@ -96,54 +96,53 @@ public class TransactionControllerTest {
     }
 
     @Test
-    public void testItCanUpdateATransaction() throws Exception
+    public void testItCanUpdateAnExpense() throws Exception
     {
         var user = mockUserFactory.makeMockUser();
-        Transaction transaction = mockTransactionFactory.makeTransaction(user.getId());
+        Expense expense = mockExpenseFactory.makeTransaction(user.getId());
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
-        UpdateTransactionRequest request =
-                new UpdateTransactionRequest(
-                        transaction.getId(),
+        UpdateExpenseRequest request =
+                new UpdateExpenseRequest(
+                        expense.getId(),
                         "this has been updated",
                         "ooooh, notes",
                         9999,
                         Set.of("BUSINESS"));
         String requestJson = writer.writeValueAsString(request);
-        this.mockMvc.perform(patch("/api/v1/transactions/"+transaction.getId()).with(user(user))
+        this.mockMvc.perform(patch("/api/v1/expenses/"+ expense.getId()).with(user(user))
                         .content(requestJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isAccepted(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        MockMvcResultMatchers.jsonPath("$.Transaction.categories[0]", hasValue("CATEGORY_BUSINESS"))
+                        MockMvcResultMatchers.jsonPath("$.Expense.categories[0]", hasValue("CATEGORY_BUSINESS"))
         );
     }
 
     @Test
-    public void testItCanDeleteATransaction() throws Exception
+    public void testItCanDeleteAnExpense() throws Exception
     {
         var user = mockUserFactory.makeMockUser();
-        Transaction transaction = mockTransactionFactory.makeTransaction(user.getId());
+        Expense expense = mockExpenseFactory.makeTransaction(user.getId());
 
-        this.mockMvc.perform(delete("/api/v1/transactions/"+transaction.getId()).with(user(user)))
+        this.mockMvc.perform(delete("/api/v1/expenses/"+ expense.getId()).with(user(user)))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testItCanRetrieveATransaction() throws Exception
+    public void testItCanRetrieveAnExpense() throws Exception
     {
         var user = mockUserFactory.makeMockUser();
-        Transaction transaction = mockTransactionFactory.makeTransaction(user.getId());
+        Expense expense = mockExpenseFactory.makeTransaction(user.getId());
 
-        this.mockMvc.perform(get("/api/v1/transactions/"+transaction.getId()).with(user(user)))
+        this.mockMvc.perform(get("/api/v1/expenses/"+ expense.getId()).with(user(user)))
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        MockMvcResultMatchers.jsonPath("$.Transaction.id", notNullValue())
+                        MockMvcResultMatchers.jsonPath("$.Expense.id", notNullValue())
                 );
     }
-
 }

@@ -1,8 +1,8 @@
 package com.edward.calculoapi.utils;
 
-import com.edward.calculoapi.database.repositories.TransactionRepository;
+import com.edward.calculoapi.database.repositories.ExpenseRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
-import com.edward.calculoapi.models.Transaction;
+import com.edward.calculoapi.models.Expense;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 @Component
-public class MockTransactionFactory {
+public class MockExpenseFactory {
 
     private final Faker faker = new Faker(new Locale("en-GB"));
 
@@ -18,17 +18,17 @@ public class MockTransactionFactory {
     private UserRepository userRepository;
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private ExpenseRepository expenseRepository;
 
-    public Transaction makeTransaction(long userId)
+    public Expense makeTransaction(long userId)
     {
-        Transaction transaction = new Transaction(
+        Expense expense = new Expense(
                 faker.lordOfTheRings().location(),
                 faker.lorem().paragraph(2),
                 (float) faker.number().randomDouble(2,3,7),
                 userRepository.findById(userId).get());
 
-        return transactionRepository.save(transaction);
+        return expenseRepository.save(expense);
     }
 
 }

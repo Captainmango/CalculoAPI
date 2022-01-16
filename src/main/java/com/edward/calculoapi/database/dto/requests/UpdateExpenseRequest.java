@@ -3,7 +3,7 @@ package com.edward.calculoapi.database.dto.requests;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
-public class UpdateTransactionRequest {
+public class UpdateExpenseRequest {
 
     @NotNull
     private long id;
@@ -12,7 +12,7 @@ public class UpdateTransactionRequest {
     private float total;
     private Set<String> categories;
 
-    public UpdateTransactionRequest(long id, String title, String notes, float total, Set<String> categories) {
+    public UpdateExpenseRequest(long id, String title, String notes, float total, Set<String> categories) {
         this.id = id;
         this.title = title;
         this.notes = notes;

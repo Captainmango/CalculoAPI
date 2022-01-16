@@ -1,12 +1,9 @@
 package com.edward.calculoapi.database.dto.requests;
 
-import com.edward.calculoapi.models.Category;
-import com.edward.calculoapi.models.User;
-
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
-public class CreateTransactionRequest {
+public class CreateExpenseRequest {
 
     @NotBlank
     private String title;
@@ -20,7 +17,7 @@ public class CreateTransactionRequest {
         return categories;
     }
 
-    public CreateTransactionRequest(String title, String notes, float total, Set<String> categories) {
+    public CreateExpenseRequest(String title, String notes, float total, Set<String> categories) {
         this.title = title;
         this.notes = notes;
         this.total = total;

@@ -22,4 +22,4 @@ To start the project in development mode. Alternatively, this can be started usi
 
 ## Notes
 
-The tests use very basic factories to provide users and transactions for testing. There is an entirely separate configuration for running tests that drops and remakes the db on every run using H2. The console is not available during tests due to the spring security set up. This can be turned off in WebSecurityConfig.java
+The tests use very basic factories to provide users and expenses for testing. There is an entirely separate configuration for running tests that drops and remakes the db on every run using H2. The console is not available during tests due to the spring security set up. This can be turned off in WebSecurityConfig.java

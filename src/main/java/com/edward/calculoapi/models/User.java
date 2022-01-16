@@ -50,7 +50,7 @@ public class User {
     private String passwordDigest;
 
     @OneToMany(mappedBy = "user")
-    private List<Transaction> transactions;
+    private List<Expense> expenses;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
