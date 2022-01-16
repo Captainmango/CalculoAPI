@@ -77,7 +77,7 @@ public class UserAuthService {
                 roles);
     }
 
-    public MessageResponse createUserAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest){
+    public User createUserAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest){
         if (userRepository.existsByEmail(createAccountRequest.getEmail())) {
            throw new EmailInUseException("Email already in use");
         }
@@ -90,7 +90,7 @@ public class UserAuthService {
                 );
 
         user.setRoles(setRoleForUser(createAccountRequest));
-        return new MessageResponse("Created account for user");
+        return userRepository.save(user);
     }
 
     public TokenRefreshResponse loginWithRefresh(@Valid @RequestBody TokenRefreshRequest request){
