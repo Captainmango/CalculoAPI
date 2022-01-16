@@ -1,0 +1,22 @@
+version: "3"
+services:
+  server:
+    image: calculo-api
+    ports:
+      - "8080:8080"
+    networks:
+      - calculo-net
+    depends_on:
+      - psql-db
+
+  db:
+    image: postgres:13
+    networks:
+      - calculo-net
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=calculo_db
+      - POSTGRES_USER=calculo
+
+networks:
+  calculo-net:
