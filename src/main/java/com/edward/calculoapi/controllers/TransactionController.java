@@ -68,7 +68,7 @@ public class TransactionController {
     public ResponseEntity<?> getTransactionForUser (
             @PathVariable long id
     ) {
-        Transaction transaction = transactionService.getTransactionForUser(id);
+        Transaction transaction = transactionService.getTransactionForUserById(id);
         return ResponseEntity.ok().body(transaction);
     }
 
@@ -77,7 +77,7 @@ public class TransactionController {
     public ResponseEntity<?> deleteTransactionForUser (
             @PathVariable long id
     ) {
-        return transactionService.deleteTransactionForUser(id);
+        return transactionService.deleteTransactionForUserById(id);
     }
 
 }

@@ -6,7 +6,6 @@ import com.edward.calculoapi.database.repositories.CategoryRepository;
 import com.edward.calculoapi.database.repositories.TransactionRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.exceptions.AuthException;
-import com.edward.calculoapi.exceptions.ResourceUpdateErrorException;
 import com.edward.calculoapi.models.*;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
@@ -77,12 +76,12 @@ public class TransactionCRUDService {
         return transactionRepository.saveAndFlush(transaction);
     }
 
-    public Transaction getTransactionForUser(long id)
+    public Transaction getTransactionForUserById(long id)
     {
         return transactionRepository.findById(id).orElseThrow();
     }
 
-    public ResponseEntity<?> deleteTransactionForUser(long id)
+    public ResponseEntity<?> deleteTransactionForUserById(long id)
     {
         UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
         User user = userRepository.findById(currentUser.getId()).orElseThrow();

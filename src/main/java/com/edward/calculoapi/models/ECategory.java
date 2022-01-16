@@ -26,7 +26,7 @@ public enum ECategory {
         }
 
         for(ECategory categoryType : ECategory.values()) {
-            if(name.equals(categoryType.name)) {
+            if(name.toUpperCase().equals(categoryType.name)) {
                 return true;
             }
         }
