@@ -1,11 +1,10 @@
-package com.edward.calculoapi.controllers;
+package com.edward.calculoapi.api.controllers;
 
-import com.edward.calculoapi.database.dto.requests.CreateAccountRequest;
-import com.edward.calculoapi.database.dto.requests.LogInRequest;
-import com.edward.calculoapi.database.dto.requests.TokenRefreshRequest;
-import com.edward.calculoapi.database.dto.responses.LogInResponse;
-import com.edward.calculoapi.database.dto.responses.MessageResponse;
-import com.edward.calculoapi.database.dto.responses.TokenRefreshResponse;
+import com.edward.calculoapi.api.dto.requests.CreateAccountRequest;
+import com.edward.calculoapi.api.dto.requests.LogInRequest;
+import com.edward.calculoapi.api.dto.requests.TokenRefreshRequest;
+import com.edward.calculoapi.api.dto.responses.LogInResponse;
+import com.edward.calculoapi.api.dto.responses.TokenRefreshResponse;
 import com.edward.calculoapi.models.User;
 import com.edward.calculoapi.services.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;

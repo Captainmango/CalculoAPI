@@ -1,11 +1,12 @@
-package com.edward.calculoapi.controllers;
+package com.edward.calculoapi.api.controllers;
 
-import com.edward.calculoapi.database.dto.requests.CreateExpenseRequest;
-import com.edward.calculoapi.database.dto.requests.UpdateExpenseRequest;
+import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
+import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
 import com.edward.calculoapi.models.Expense;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import com.edward.calculoapi.services.ExpenseCRUDService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +38,7 @@ public class ExpenseController {
     public ResponseEntity<?> getAllCurrentUserExpenses() {
         UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
         List<Expense> expenses = expenseCRUDService.getAllExpensesForUser(currentUser.getEmail());
+
         return ResponseEntity.ok(expenses);
     }
 

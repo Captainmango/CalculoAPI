@@ -1,4 +1,4 @@
-package com.edward.calculoapi.database.dto.requests;
+package com.edward.calculoapi.api.dto.requests;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

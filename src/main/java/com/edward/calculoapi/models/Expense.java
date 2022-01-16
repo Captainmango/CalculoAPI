@@ -1,5 +1,6 @@
 package com.edward.calculoapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -41,6 +42,7 @@ public class Expense {
     )
     private float total;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;
@@ -109,5 +111,13 @@ public class Expense {
 
     public User getUser() {
         return user;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

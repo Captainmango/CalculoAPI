@@ -1,11 +1,10 @@
 package com.edward.calculoapi.services;
 
-import com.edward.calculoapi.database.dto.requests.CreateAccountRequest;
-import com.edward.calculoapi.database.dto.requests.LogInRequest;
-import com.edward.calculoapi.database.dto.requests.TokenRefreshRequest;
-import com.edward.calculoapi.database.dto.responses.LogInResponse;
-import com.edward.calculoapi.database.dto.responses.MessageResponse;
-import com.edward.calculoapi.database.dto.responses.TokenRefreshResponse;
+import com.edward.calculoapi.api.dto.requests.CreateAccountRequest;
+import com.edward.calculoapi.api.dto.requests.LogInRequest;
+import com.edward.calculoapi.api.dto.requests.TokenRefreshRequest;
+import com.edward.calculoapi.api.dto.responses.LogInResponse;
+import com.edward.calculoapi.api.dto.responses.TokenRefreshResponse;
 import com.edward.calculoapi.exceptions.EmailInUseException;
 import com.edward.calculoapi.exceptions.RoleNotValidException;
 import com.edward.calculoapi.exceptions.TokenRefreshException;
@@ -19,7 +18,6 @@ import com.edward.calculoapi.security.jwt.JwtUtils;
 import com.edward.calculoapi.security.services.RefreshTokenService;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

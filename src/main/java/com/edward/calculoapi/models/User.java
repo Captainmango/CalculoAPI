@@ -1,5 +1,6 @@
 package com.edward.calculoapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,7 +15,6 @@ import java.util.Set;
 @Entity(name="user")
 @Table(name="users")
 public class User {
-
     @Id
     @GeneratedValue
     @Column(
@@ -43,6 +43,7 @@ public class User {
     )
     private String email;
 
+    @JsonIgnore
     @Column(
             name="password_digest",
             nullable = false

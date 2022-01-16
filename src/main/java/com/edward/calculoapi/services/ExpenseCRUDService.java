@@ -1,11 +1,12 @@
 package com.edward.calculoapi.services;
 
-import com.edward.calculoapi.database.dto.requests.CreateExpenseRequest;
-import com.edward.calculoapi.database.dto.requests.UpdateExpenseRequest;
+import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
+import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
 import com.edward.calculoapi.database.repositories.CategoryRepository;
 import com.edward.calculoapi.database.repositories.ExpenseRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.exceptions.AuthException;
+import com.edward.calculoapi.exceptions.ResourceNotFoundErrorException;
 import com.edward.calculoapi.models.*;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
@@ -78,7 +79,9 @@ public class ExpenseCRUDService {
 
     public Expense geExpenseForUserById(long id)
     {
-        return expenseRepository.findById(id).orElseThrow();
+        return expenseRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundErrorException("Cannot find expense with id " + id)
+        );
     }
 
     public ResponseEntity<?> deleteExpenseForUserById(long id)

@@ -5,8 +5,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.edward.calculoapi.database.dto.requests.CreateExpenseRequest;
-import com.edward.calculoapi.database.dto.requests.UpdateExpenseRequest;
+import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
+import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
 import com.edward.calculoapi.models.Expense;
 import com.edward.calculoapi.utils.MockExpenseFactory;
 import com.edward.calculoapi.utils.MockUserFactory;

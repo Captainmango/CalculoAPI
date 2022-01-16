@@ -1,4 +1,4 @@
-package com.edward.calculoapi.database.dto.responses;
+package com.edward.calculoapi.api.dto.responses;
 
 public class TokenRefreshResponse {
     private String accessToken;
