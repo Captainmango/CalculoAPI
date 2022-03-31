@@ -11,7 +11,8 @@ build:
 
 # build image and start docker container
 build-up:
-		build
+		${MVN_BUILD}
+		${DOCKER} image build -t calculo-api .
 		${COMPOSE} up --detach
 
 # stop docker container
@@ -23,8 +24,8 @@ up:
 		${COMPOSE} up --detach
 
 re-up:
-		down
-		build-up
+		${COMPOSE} down
+		${COMPOSE} up --detach
 
 check:
 		${MVN_TEST}
