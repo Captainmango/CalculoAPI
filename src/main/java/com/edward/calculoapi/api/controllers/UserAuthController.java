@@ -3,9 +3,6 @@ package com.edward.calculoapi.api.controllers;
 import com.edward.calculoapi.api.dto.requests.CreateAccountRequest;
 import com.edward.calculoapi.api.dto.requests.LogInRequest;
 import com.edward.calculoapi.api.dto.requests.TokenRefreshRequest;
-import com.edward.calculoapi.api.dto.responses.LogInResponse;
-import com.edward.calculoapi.api.dto.responses.TokenRefreshResponse;
-import com.edward.calculoapi.models.User;
 import com.edward.calculoapi.services.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +25,8 @@ public class UserAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody CreateAccountRequest createAccountRequest) {
-        User user = userAuthService.createUserAccount(createAccountRequest);
-        return ResponseEntity.ok(user);
-
+        LogInRequest request = userAuthService.createUserAccount(createAccountRequest);
+        return userAuthService.loginUser(request);
     }
 
     @PostMapping("/refreshtoken")

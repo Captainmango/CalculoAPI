@@ -4,7 +4,6 @@ import com.edward.calculoapi.api.dto.requests.CreateAccountRequest;
 import com.edward.calculoapi.api.dto.requests.LogInRequest;
 import com.edward.calculoapi.api.dto.requests.TokenRefreshRequest;
 import com.edward.calculoapi.api.dto.responses.LogInResponse;
-import com.edward.calculoapi.api.dto.responses.TokenRefreshResponse;
 import com.edward.calculoapi.exceptions.EmailInUseException;
 import com.edward.calculoapi.exceptions.RoleNotValidException;
 import com.edward.calculoapi.exceptions.TokenRefreshException;
@@ -30,7 +29,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
@@ -78,12 +76,11 @@ public class UserAuthService {
                         userDetails.getId(),
                         userDetails.getFirstName(),
                         userDetails.getEmail(),
-                        roles,
                         refreshToken.getToken()
                 ));
     }
 
-    public User createUserAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest){
+    public LogInRequest createUserAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest){
         if (userRepository.existsByEmail(createAccountRequest.getEmail())) {
            throw new EmailInUseException("Email already in use");
         }
@@ -96,7 +93,12 @@ public class UserAuthService {
                 );
 
         user.setRoles(setRoleForUser(createAccountRequest));
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return new LogInRequest(
+                createAccountRequest.getEmail(),
+                createAccountRequest.getPassword()
+        );
     }
 
     public ResponseEntity<?> loginWithRefresh(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest){
@@ -109,7 +111,10 @@ public class UserAuthService {
                     ResponseCookie token = jwtUtils.generateJwtCookieFromEmail(user.getEmail());
                     return ResponseEntity.ok()
                             .header(HttpHeaders.SET_COOKIE, token.toString())
-                            .body(new TokenRefreshResponse(
+                            .body(new LogInResponse(
+                                    user.getId(),
+                                    user.getFirstName(),
+                                    user.getEmail(),
                                     requestRefreshToken
                             ));
                 })

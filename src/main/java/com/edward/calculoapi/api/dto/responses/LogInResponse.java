@@ -12,11 +12,10 @@ public class LogInResponse {
     private List<String> roles;
     private String refreshToken;
 
-    public LogInResponse(Long id, String firstName, String email, List<String> roles, String refreshToken) {
+    public LogInResponse(Long id, String firstName, String email, String refreshToken) {
         this.id = id;
         this.firstName = firstName;
         this.email = email;
-        this.roles = roles;
         this.refreshToken = refreshToken;
     }
 

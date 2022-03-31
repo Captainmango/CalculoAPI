@@ -118,7 +118,7 @@ public class ExpenseControllerTest {
                 .andExpectAll(
                         status().isAccepted(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        MockMvcResultMatchers.jsonPath("$.Expense.categories[0]", hasValue("CATEGORY_BUSINESS"))
+                        MockMvcResultMatchers.jsonPath("$.categories[0]", hasValue("CATEGORY_BUSINESS"))
         );
     }
 
@@ -142,7 +142,7 @@ public class ExpenseControllerTest {
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        MockMvcResultMatchers.jsonPath("$.Expense.id", notNullValue())
+                        MockMvcResultMatchers.jsonPath("$.id", notNullValue())
                 );
     }
 }

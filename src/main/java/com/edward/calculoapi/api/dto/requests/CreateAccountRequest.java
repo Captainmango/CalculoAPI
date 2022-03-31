@@ -18,6 +18,14 @@ public class CreateAccountRequest {
     @Size(min=6)
     private String password;
 
+    public CreateAccountRequest(String firstName, String lastName, Set<String> roles, String password, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.roles = roles;
+        this.password = password;
+        this.email = email;
+    }
+
     @NotBlank
     @Email
     private String email;
