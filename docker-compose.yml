@@ -11,6 +11,8 @@ services:
 
   db:
     image: postgres:13
+    ports:
+      - "5432:5432"
     networks:
       - calculo-net
     environment:

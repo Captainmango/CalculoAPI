@@ -12,7 +12,7 @@ build:
 # build image and start docker container
 build-up:
 		build
-		${COMPOSE} up
+		${COMPOSE} up --detach
 
 # stop docker container
 down:
@@ -20,7 +20,7 @@ down:
 
 # start docker container
 up:
-		${COMPOSE} up
+		${COMPOSE} up --detach
 
 re-up:
 		down
