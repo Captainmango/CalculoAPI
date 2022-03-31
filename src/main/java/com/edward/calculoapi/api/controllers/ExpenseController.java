@@ -2,11 +2,13 @@ package com.edward.calculoapi.api.controllers;
 
 import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
 import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
+import com.edward.calculoapi.api.dto.responses.ExpenseResponse;
+import com.edward.calculoapi.api.dto.responses.MessageResponse;
+import com.edward.calculoapi.api.mappers.ExpenseMapper;
 import com.edward.calculoapi.models.Expense;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import com.edward.calculoapi.services.ExpenseCRUDService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +22,12 @@ import java.util.List;
 public class ExpenseController {
 
     private final ExpenseCRUDService expenseCRUDService;
-
+    private final ExpenseMapper expenseMapper;
     private final AuthenticationFacadeImpl auth;
 
-    public ExpenseController(ExpenseCRUDService expenseCRUDService, AuthenticationFacadeImpl auth) {
+    public ExpenseController(ExpenseCRUDService expenseCRUDService, ExpenseMapper expenseMapper, AuthenticationFacadeImpl auth) {
         this.expenseCRUDService = expenseCRUDService;
+        this.expenseMapper = expenseMapper;
         this.auth = auth;
     }
 
@@ -32,14 +35,16 @@ public class ExpenseController {
     @GetMapping("/admin/expenses")
     public ResponseEntity<?> adminAllUserExpenses()
     {
-        return ResponseEntity.ok(expenseCRUDService.adminGetAllExpenses());
+        List<ExpenseResponse> expenseResponseList = expenseMapper.expenseListToDto(expenseCRUDService.adminGetAllExpenses());
+
+        return ResponseEntity.ok(expenseResponseList);
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping(path="/expenses", produces="application/json")
     public ResponseEntity<?> getAllCurrentUserExpenses() {
         UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
-        List<Expense> expenses = expenseCRUDService.getAllExpensesForUser(currentUser.getEmail());
+        List<ExpenseResponse> expenses = expenseMapper.expenseListToDto(expenseCRUDService.getAllExpensesForUser(currentUser.getEmail()));
 
         return ResponseEntity.ok(expenses);
     }
@@ -49,7 +54,7 @@ public class ExpenseController {
     public ResponseEntity<?> createExpenseForLoggedInUser(
             @Valid @RequestBody CreateExpenseRequest createExpenseRequest
     ) {
-        Expense expense = expenseCRUDService.createExpenseForUser(createExpenseRequest);
+        ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.createExpenseForUser(createExpenseRequest));
         return ResponseEntity.accepted().body(expense);
     }
 
@@ -63,7 +68,7 @@ public class ExpenseController {
             return ResponseEntity.badRequest().body("Your update request could not be completed.");
         }
 
-        Expense expense = expenseCRUDService.updateExpenseForUser(updateExpenseRequest);
+        ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.updateExpenseForUser(updateExpenseRequest));
         return ResponseEntity.accepted().body(expense);
     }
 
@@ -72,7 +77,7 @@ public class ExpenseController {
     public ResponseEntity<?> getExpenseForUser (
             @PathVariable long id
     ) {
-        Expense expense = expenseCRUDService.geExpenseForUserById(id);
+        ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.geExpenseForUserById(id));
         return ResponseEntity.ok().body(expense);
     }
 

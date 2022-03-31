@@ -64,6 +64,8 @@ public class ExpenseControllerTest {
     {
         var user = mockUserFactory.makeMockUser();
 
+        mockExpenseFactory.makeTransaction(user.getId());
+
         this.mockMvc.perform(get("/api/v1/expenses").with(user(user))).andExpectAll(
                 status().isOk(),
                 content().contentType(MediaType.APPLICATION_JSON),
@@ -110,7 +112,7 @@ public class ExpenseControllerTest {
                         "this has been updated",
                         "ooooh, notes",
                         9999,
-                        Set.of("BUSINESS"));
+                        Set.of("GENERAL"));
         String requestJson = writer.writeValueAsString(request);
         this.mockMvc.perform(patch("/api/v1/expenses/"+ expense.getId()).with(user(user))
                         .content(requestJson)
@@ -118,7 +120,7 @@ public class ExpenseControllerTest {
                 .andExpectAll(
                         status().isAccepted(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        MockMvcResultMatchers.jsonPath("$.categories[0]", hasValue("CATEGORY_BUSINESS"))
+                        MockMvcResultMatchers.jsonPath("$.categories[0]", hasValue("CATEGORY_GENERAL"))
         );
     }
 
