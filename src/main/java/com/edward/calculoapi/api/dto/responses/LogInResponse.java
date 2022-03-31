@@ -1,6 +1,7 @@
 package com.edward.calculoapi.api.dto.responses;
 
 import com.edward.calculoapi.models.RefreshToken;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
@@ -9,7 +10,6 @@ public class LogInResponse {
     private Long id;
     private String firstName;
     private String email;
-    private List<String> roles;
     private String refreshToken;
 
     public LogInResponse(Long id, String firstName, String email, String refreshToken) {
@@ -42,14 +42,6 @@ public class LogInResponse {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
     }
 
     public String getRefreshToken() {
