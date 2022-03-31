@@ -22,17 +22,20 @@ import java.util.Set;
 @Service
 public class ExpenseCRUDService {
 
-    @Autowired
-    private ExpenseRepository expenseRepository;
+    private final ExpenseRepository expenseRepository;
 
-    @Autowired
-    private AuthenticationFacadeImpl auth;
+    private final AuthenticationFacadeImpl auth;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+
+    public ExpenseCRUDService(ExpenseRepository expenseRepository, AuthenticationFacadeImpl auth, UserRepository userRepository, CategoryRepository categoryRepository) {
+        this.expenseRepository = expenseRepository;
+        this.auth = auth;
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     public List<Expense> adminGetAllExpenses()
     {

@@ -19,11 +19,14 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class ExpenseController {
 
-    @Autowired
-    private ExpenseCRUDService expenseCRUDService;
+    private final ExpenseCRUDService expenseCRUDService;
 
-    @Autowired
-    AuthenticationFacadeImpl auth;
+    private final AuthenticationFacadeImpl auth;
+
+    public ExpenseController(ExpenseCRUDService expenseCRUDService, AuthenticationFacadeImpl auth) {
+        this.expenseCRUDService = expenseCRUDService;
+        this.auth = auth;
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/expenses")
