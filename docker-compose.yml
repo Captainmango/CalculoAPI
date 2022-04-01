@@ -11,6 +11,8 @@ services:
 
   db:
     image: postgres:13
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -22,3 +24,6 @@ services:
 
 networks:
   calculo-net:
+
+volumes:
+  pgdata:
