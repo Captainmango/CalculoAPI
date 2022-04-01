@@ -13,6 +13,8 @@ public class TokenRefreshRequest {
         this.refreshToken = refreshToken;
     }
 
+    public TokenRefreshRequest(){}
+
     public String getRefreshToken() { return refreshToken; }
 
     public void setRefreshToken(String refreshToken) {
