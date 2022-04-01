@@ -1,4 +1,4 @@
-package com.edward.calculoapi.utils;
+package com.edward.calculoapi.utils.factories;
 
 import com.edward.calculoapi.database.repositories.RoleRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;

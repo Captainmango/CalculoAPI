@@ -11,7 +11,7 @@ import com.edward.calculoapi.database.models.Expense;
 import com.edward.calculoapi.database.models.User;
 import com.edward.calculoapi.exceptions.AuthException;
 import com.edward.calculoapi.exceptions.ResourceNotFoundErrorException;
-import com.edward.calculoapi.models.*;
+import com.edward.calculoapi.database.models.*;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
@@ -120,5 +120,4 @@ public class ExpenseCRUDService {
 
         return expenseCategories;
     }
-
 }

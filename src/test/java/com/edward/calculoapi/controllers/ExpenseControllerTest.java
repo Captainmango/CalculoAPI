@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
 import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
 import com.edward.calculoapi.database.models.Expense;
-import com.edward.calculoapi.utils.MockExpenseFactory;
-import com.edward.calculoapi.utils.MockUserFactory;
+import com.edward.calculoapi.utils.factories.MockExpenseFactory;
+import com.edward.calculoapi.utils.factories.MockUserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.Test;
@@ -64,7 +64,7 @@ public class ExpenseControllerTest {
     {
         var user = mockUserFactory.makeMockUser();
 
-        mockExpenseFactory.makeTransaction(user.getId());
+        mockExpenseFactory.makeExpense(user.getId());
 
         this.mockMvc.perform(get("/api/v1/expenses").with(user(user))).andExpectAll(
                 status().isOk(),
@@ -101,7 +101,7 @@ public class ExpenseControllerTest {
     public void testItCanUpdateAnExpense() throws Exception
     {
         var user = mockUserFactory.makeMockUser();
-        Expense expense = mockExpenseFactory.makeTransaction(user.getId());
+        Expense expense = mockExpenseFactory.makeExpense(user.getId());
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
@@ -128,7 +128,7 @@ public class ExpenseControllerTest {
     public void testItCanDeleteAnExpense() throws Exception
     {
         var user = mockUserFactory.makeMockUser();
-        Expense expense = mockExpenseFactory.makeTransaction(user.getId());
+        Expense expense = mockExpenseFactory.makeExpense(user.getId());
 
         this.mockMvc.perform(delete("/api/v1/expenses/"+ expense.getId()).with(user(user)))
                 .andExpect(status().isOk());
@@ -138,7 +138,7 @@ public class ExpenseControllerTest {
     public void testItCanRetrieveAnExpense() throws Exception
     {
         var user = mockUserFactory.makeMockUser();
-        Expense expense = mockExpenseFactory.makeTransaction(user.getId());
+        Expense expense = mockExpenseFactory.makeExpense(user.getId());
 
         this.mockMvc.perform(get("/api/v1/expenses/"+ expense.getId()).with(user(user)))
                 .andExpectAll(
