@@ -1,4 +1,4 @@
-package com.edward.calculoapi.models;
+package com.edward.calculoapi.database.models;
 
 import org.apache.commons.lang3.StringUtils;
 

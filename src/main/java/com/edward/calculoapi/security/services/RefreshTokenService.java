@@ -3,15 +3,11 @@ package com.edward.calculoapi.security.services;
 import com.edward.calculoapi.database.repositories.RefreshTokenRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.exceptions.TokenRefreshException;
-import com.edward.calculoapi.models.RefreshToken;
+import com.edward.calculoapi.database.models.RefreshToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.WebUtils;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

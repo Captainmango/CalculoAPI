@@ -1,6 +1,6 @@
 package com.edward.calculoapi.security.services;
 
-import com.edward.calculoapi.models.User;
+import com.edward.calculoapi.database.models.User;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

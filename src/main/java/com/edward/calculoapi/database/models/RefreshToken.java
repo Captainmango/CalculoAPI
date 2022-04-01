@@ -1,6 +1,4 @@
-package com.edward.calculoapi.models;
-
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+package com.edward.calculoapi.database.models;
 
 import javax.persistence.*;
 import java.time.Instant;

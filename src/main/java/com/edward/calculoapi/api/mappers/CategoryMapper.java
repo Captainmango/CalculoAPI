@@ -1,7 +1,7 @@
 package com.edward.calculoapi.api.mappers;
 
 import com.edward.calculoapi.api.dto.CategoryDto;
-import com.edward.calculoapi.models.Category;
+import com.edward.calculoapi.database.models.Category;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;

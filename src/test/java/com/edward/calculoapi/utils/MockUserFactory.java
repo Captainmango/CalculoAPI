@@ -3,13 +3,12 @@ package com.edward.calculoapi.utils;
 import com.edward.calculoapi.database.repositories.RoleRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.exceptions.RoleNotValidException;
-import com.edward.calculoapi.models.ERole;
-import com.edward.calculoapi.models.Role;
-import com.edward.calculoapi.models.User;
+import com.edward.calculoapi.database.models.ERole;
+import com.edward.calculoapi.database.models.Role;
+import com.edward.calculoapi.database.models.User;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import com.edward.calculoapi.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;

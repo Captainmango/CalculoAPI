@@ -1,10 +1,5 @@
 package com.edward.calculoapi.api.dto.responses;
 
-import com.edward.calculoapi.models.RefreshToken;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.List;
-
 public class LogInResponse {
 
     private Long id;

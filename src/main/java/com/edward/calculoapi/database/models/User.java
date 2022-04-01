@@ -1,4 +1,4 @@
-package com.edward.calculoapi.models;
+package com.edward.calculoapi.database.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;

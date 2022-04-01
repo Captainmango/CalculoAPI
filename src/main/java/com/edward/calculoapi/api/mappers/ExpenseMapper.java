@@ -1,7 +1,7 @@
 package com.edward.calculoapi.api.mappers;
 
 import com.edward.calculoapi.api.dto.responses.ExpenseResponse;
-import com.edward.calculoapi.models.Expense;
+import com.edward.calculoapi.database.models.Expense;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

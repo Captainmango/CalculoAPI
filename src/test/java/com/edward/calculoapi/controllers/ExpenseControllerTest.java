@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
 import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
-import com.edward.calculoapi.models.Expense;
+import com.edward.calculoapi.database.models.Expense;
 import com.edward.calculoapi.utils.MockExpenseFactory;
 import com.edward.calculoapi.utils.MockUserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;

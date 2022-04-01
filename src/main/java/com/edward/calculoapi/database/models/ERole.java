@@ -1,4 +1,4 @@
-package com.edward.calculoapi.models;
+package com.edward.calculoapi.database.models;
 
 public enum ERole {
     ROLE_USER,

@@ -1,7 +1,7 @@
 package com.edward.calculoapi.services;
 
 import com.edward.calculoapi.database.repositories.UserRepository;
-import com.edward.calculoapi.models.User;
+import com.edward.calculoapi.database.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

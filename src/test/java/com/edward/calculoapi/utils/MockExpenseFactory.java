@@ -2,7 +2,7 @@ package com.edward.calculoapi.utils;
 
 import com.edward.calculoapi.database.repositories.ExpenseRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
-import com.edward.calculoapi.models.Expense;
+import com.edward.calculoapi.database.models.Expense;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

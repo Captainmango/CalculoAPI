@@ -2,12 +2,11 @@ package com.edward.calculoapi.api.dto.responses;
 
 import com.edward.calculoapi.api.dto.CategoryDto;
 import com.edward.calculoapi.api.mappers.CategoryMapper;
-import com.edward.calculoapi.models.Expense;
+import com.edward.calculoapi.database.models.Expense;
 
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ExpenseResponse {
 
