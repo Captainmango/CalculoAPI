@@ -1,11 +1,12 @@
 DELETE FROM user_roles;
 DELETE FROM transaction_categories;
+DELETE FROM refreshtoken;
 DELETE FROM transactions;
 DELETE FROM users;
 
 
-INSERT INTO users (id, created_at, email, first_name, last_name, password_digest, updated_at) VALUES(1, '2022-04-01 08:30:09.028', 'test1.test@gmail.com', 'Edward', 'Heaver', '$2a$10$IQSSBjSaXamKUXf/inyXpOxOkT9wTWR/hrNvyCQJspVn9UDB97syC', '2022-04-01 08:30:09.028');
-INSERT INTO users (id, created_at, email, first_name, last_name, password_digest, updated_at) VALUES(2, '2022-04-01 08:30:09.028', 'test2.test@gmail.com', 'Edward', 'Heaver', '$2a$10$IQSSBjSaXamKUXf/inyXpOxOkT9wTWR/hrNvyCQJspVn9UDB97syC', '2022-04-01 08:30:09.028');
+INSERT INTO users (id, created_at, email, first_name, last_name, password_digest, updated_at) VALUES(1, '2022-04-01 08:30:09.028', 'test1.test@gmail.com', 'Edward', 'Heaver', '$2a$10$On9HbwMezeageU73Xeuz5OSDSvZ9u11O/UjaxCFh3OconUoB.c6eq', '2022-04-01 08:30:09.028');
+INSERT INTO users (id, created_at, email, first_name, last_name, password_digest, updated_at) VALUES(2, '2022-04-01 08:30:09.028', 'test2.test@gmail.com', 'Edward', 'Heaver', '$2a$10$On9HbwMezeageU73Xeuz5OSDSvZ9u11O/UjaxCFh3OconUoB.c6eq', '2022-04-01 08:30:09.028');
 
 INSERT INTO user_roles (user_id, role_id) VALUES(1, 1);
 INSERT INTO user_roles (user_id, role_id) VALUES(2, 2);
