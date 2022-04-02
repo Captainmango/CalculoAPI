@@ -64,6 +64,7 @@ public class UserAuthService {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(authentication);
+        String jwtToken = jwtUtils.generateJwtToken(authentication);
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
@@ -75,7 +76,8 @@ public class UserAuthService {
                         userDetails.getId(),
                         userDetails.getFirstName(),
                         userDetails.getEmail(),
-                        refreshToken.getToken()
+                        refreshToken.getToken(),
+                        jwtToken
                 ));
     }
 
@@ -108,13 +110,15 @@ public class UserAuthService {
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     ResponseCookie token = jwtUtils.generateJwtCookieFromEmail(user.getEmail());
+                    String jwt = jwtUtils.generateJwtFromEmail(user.getEmail());
                     return ResponseEntity.ok()
                             .header(HttpHeaders.SET_COOKIE, token.toString())
                             .body(new LogInResponse(
                                     user.getId(),
                                     user.getFirstName(),
                                     user.getEmail(),
-                                    requestRefreshToken
+                                    requestRefreshToken,
+                                    jwt
                             ));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,

@@ -6,12 +6,14 @@ public class LogInResponse {
     private String firstName;
     private String email;
     private String refreshToken;
+    private String jwt;
 
-    public LogInResponse(Long id, String firstName, String email, String refreshToken) {
+    public LogInResponse(Long id, String firstName, String email, String refreshToken, String jwt) {
         this.id = id;
         this.firstName = firstName;
         this.email = email;
         this.refreshToken = refreshToken;
+        this.jwt = jwt;
     }
 
 
@@ -45,5 +47,9 @@ public class LogInResponse {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public String getJwt() {
+        return jwt;
     }
 }
