@@ -1,6 +1,6 @@
 package com.edward.calculoapi.api.dto.responses;
 
-import com.edward.calculoapi.api.dto.CategoryDto;
+import com.edward.calculoapi.api.dto.shared.CategoryDto;
 import com.edward.calculoapi.api.mappers.CategoryMapper;
 import com.edward.calculoapi.database.models.Expense;
 

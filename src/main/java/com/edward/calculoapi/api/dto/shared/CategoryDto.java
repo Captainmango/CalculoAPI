@@ -1,4 +1,4 @@
-package com.edward.calculoapi.api.dto;
+package com.edward.calculoapi.api.dto.shared;
 
 public class CategoryDto {
     private final String name;
