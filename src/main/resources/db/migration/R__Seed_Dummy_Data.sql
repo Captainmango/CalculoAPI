@@ -7,9 +7,11 @@ DELETE FROM users;
 
 INSERT INTO users (id, created_at, email, first_name, last_name, password_digest, updated_at) VALUES(1, '2022-04-01 08:30:09.028', 'test1.test@gmail.com', 'Edward', 'Heaver', '$2a$10$On9HbwMezeageU73Xeuz5OSDSvZ9u11O/UjaxCFh3OconUoB.c6eq', '2022-04-01 08:30:09.028');
 INSERT INTO users (id, created_at, email, first_name, last_name, password_digest, updated_at) VALUES(2, '2022-04-01 08:30:09.028', 'test2.test@gmail.com', 'Edward', 'Heaver', '$2a$10$On9HbwMezeageU73Xeuz5OSDSvZ9u11O/UjaxCFh3OconUoB.c6eq', '2022-04-01 08:30:09.028');
+INSERT INTO users (id, created_at, email, first_name, last_name, password_digest, updated_at) VALUES(3, '2022-04-01 08:30:09.028', 'test3.test@gmail.com', 'Edward', 'Heaver', '$2a$10$On9HbwMezeageU73Xeuz5OSDSvZ9u11O/UjaxCFh3OconUoB.c6eq', '2022-04-01 08:30:09.028');
 
 INSERT INTO user_roles (user_id, role_id) VALUES(1, 1);
 INSERT INTO user_roles (user_id, role_id) VALUES(2, 2);
+INSERT INTO user_roles (user_id, role_id) VALUES(3, 2);
 
 INSERT INTO transactions (id, created_at, notes, title, total, updated_at, user_id) VALUES(1, '2022-04-01 08:30:09.612', 'And so he spoke, and so he spoke, that Lord of Castamere, but now the rains weep o''er his hall, with no one there to hear. Yes, now the rains weep o''er his hall, and not a soul to hear.', 'Bush Tomato', 9.54, '2022-04-01 08:30:09.612', 1);
 INSERT INTO transactions (id, created_at, notes, title, total, updated_at, user_id) VALUES(2, '2022-04-01 08:30:09.622', 'Why is it that when one man builds a wall, the next man immediately needs to know what''s on the other side?', 'Papaya', 13.15, '2022-04-01 08:30:09.622', 1);
