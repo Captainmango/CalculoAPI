@@ -24,7 +24,7 @@ public class ExpenseController {
     private final ExpenseMapper expenseMapper;
     private final AuthenticationFacade auth;
 
-    public ExpenseController(ExpenseCRUDService expenseCRUDService, ExpenseMapper expenseMapper, AuthenticationFacadeImpl auth) {
+    public ExpenseController(ExpenseCRUDService expenseCRUDService, ExpenseMapper expenseMapper, AuthenticationFacade auth) {
         this.expenseCRUDService = expenseCRUDService;
         this.expenseMapper = expenseMapper;
         this.auth = auth;
