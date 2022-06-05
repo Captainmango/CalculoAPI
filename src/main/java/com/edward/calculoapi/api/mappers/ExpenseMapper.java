@@ -9,13 +9,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class ExpenseMapper {
-
-    private final CategoryMapper categoryMapper;
-
-    public ExpenseMapper(CategoryMapper categoryMapper) {
-        this.categoryMapper = categoryMapper;
-    }
-
     public List<ExpenseResponse> expenseListToDto(List<Expense> expenseList)
     {
         return expenseList.stream().map(ExpenseResponse::new).collect(Collectors.toList());

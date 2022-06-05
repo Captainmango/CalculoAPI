@@ -18,7 +18,6 @@ import com.edward.calculoapi.security.services.RefreshTokenService;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -39,24 +38,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserAuthService {
-    private final Logger logger = LoggerFactory.getLogger(UserAuthService.class);
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private static final Logger logger = LoggerFactory.getLogger(UserAuthService.class);
 
-    @Autowired
-    UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final RefreshTokenService refreshTokenService;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
-    RefreshTokenService refreshTokenService;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    JwtUtils jwtUtils;
+    public UserAuthService(AuthenticationManager authenticationManager, UserRepository userRepository, RefreshTokenService refreshTokenService, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.refreshTokenService = refreshTokenService;
+        this.roleRepository = roleRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
 
     public ResponseEntity<LogInResponse> loginUser(@Valid @RequestBody LogInRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(

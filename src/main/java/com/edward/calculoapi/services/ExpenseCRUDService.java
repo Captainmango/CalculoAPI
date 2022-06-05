@@ -11,8 +11,7 @@ import com.edward.calculoapi.database.models.Expense;
 import com.edward.calculoapi.database.models.User;
 import com.edward.calculoapi.exceptions.AuthException;
 import com.edward.calculoapi.exceptions.ResourceNotFoundErrorException;
-import com.edward.calculoapi.database.models.*;
-import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
+import com.edward.calculoapi.security.services.AuthenticationFacade;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +28,13 @@ public class ExpenseCRUDService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ExpenseRepository expenseRepository;
 
-    private final AuthenticationFacadeImpl auth;
+    private final AuthenticationFacade auth;
 
     private final UserRepository userRepository;
 
     private final CategoryRepository categoryRepository;
 
-    public ExpenseCRUDService(ExpenseRepository expenseRepository, AuthenticationFacadeImpl auth, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public ExpenseCRUDService(ExpenseRepository expenseRepository, AuthenticationFacade auth, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.expenseRepository = expenseRepository;
         this.auth = auth;
         this.userRepository = userRepository;
@@ -95,6 +94,7 @@ public class ExpenseCRUDService {
 
     public ResponseEntity<?> deleteExpenseForUserById(long id)
     {
+        //@TODO: fix the leaky abstraction. Use the UserCRUDService instead of the repo
         UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
         User user = userRepository.findById(currentUser.getId()).orElseThrow();
         Expense expense = expenseRepository.findById(id).orElseThrow();

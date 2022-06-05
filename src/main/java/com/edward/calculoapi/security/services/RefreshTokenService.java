@@ -6,8 +6,8 @@ import com.edward.calculoapi.exceptions.TokenRefreshException;
 import com.edward.calculoapi.database.models.RefreshToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,23 +18,28 @@ import java.util.UUID;
 
 @Service
 public class RefreshTokenService {
-    private final Logger logger = LoggerFactory.getLogger(RefreshTokenService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RefreshTokenService.class);
     @Value("${edward.app.jwtRefreshExpirationMs}")
     private long refreshTokenDuration;
 
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserRepository userRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.userRepository = userRepository;
+    }
 
     public Optional<RefreshToken> findByToken(String token){
         return refreshTokenRepository.findByToken(token);
     }
 
     public RefreshToken createRefreshToken(Long userId) {
+        if (userRepository.findById(userId).isEmpty()) {
+            logger.error("Could not create refresh token as user not found. UserID: {}", userId);
+            throw new UsernameNotFoundException("Could not find user");
+        }
         RefreshToken refreshToken = new RefreshToken();
-
         refreshToken.setUser(userRepository.findById(userId).get());
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDuration));
         refreshToken.setToken(UUID.randomUUID().toString());

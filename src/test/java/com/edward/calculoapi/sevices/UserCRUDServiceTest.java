@@ -3,17 +3,13 @@ package com.edward.calculoapi.sevices;
 import com.edward.calculoapi.database.models.User;
 import com.edward.calculoapi.services.UserCRUDService;
 import com.edward.calculoapi.utils.factories.MockUserFactory;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.TestPropertySource;
-
-import static org.mockito.ArgumentMatchers.anyLong;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -31,7 +27,7 @@ public class UserCRUDServiceTest
     {
         var user = mockUserFactory.makeMockUser();
 
-        User user1 = userCRUDService.findUser(user.getId());
+        User user1 = userCRUDService.findUserById(user.getId());
         Assertions.assertEquals(user1.getEmail(), user.getEmail());
     }
 
@@ -40,7 +36,7 @@ public class UserCRUDServiceTest
     {
         var error = Assertions.assertThrows(
                 UsernameNotFoundException.class,
-                () -> userCRUDService.findUser(Long.MAX_VALUE),
+                () -> userCRUDService.findUserById(Long.MAX_VALUE),
                 "User not found for this ID"
         );
 
