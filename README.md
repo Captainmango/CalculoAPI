@@ -1,4 +1,5 @@
 # Calculo API
+[![Java CI with Maven](https://github.com/Captainmango/calculoAPI/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/Captainmango/calculoAPI/actions/workflows/maven.yml)
 
 ## Background
 
