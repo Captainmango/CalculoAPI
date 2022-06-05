@@ -2,21 +2,26 @@ package com.edward.calculoapi.services;
 
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.database.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserCRUDService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public UserCRUDService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    private User findUser(long userId) throws UsernameNotFoundException
+    public User findUser(long userId) throws UsernameNotFoundException
     {
         return userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("User not found for this ID.")
+                        () ->
+                            new UsernameNotFoundException("User not found for this ID.")
                 );
     }
 }

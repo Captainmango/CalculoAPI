@@ -1,4 +1,4 @@
-package com.edward.calculoapi.controllers;
+package com.edward.calculoapi.api.controllers;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;

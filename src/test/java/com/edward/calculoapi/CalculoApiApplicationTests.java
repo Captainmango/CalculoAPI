@@ -10,4 +10,6 @@ class CalculoApiApplicationTests {
 	void contextLoads() {
 	}
 
+	//@TODO: add some smoke tests here for the application and the database
+
 }

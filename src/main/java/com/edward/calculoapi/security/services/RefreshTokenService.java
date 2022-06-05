@@ -4,6 +4,8 @@ import com.edward.calculoapi.database.repositories.RefreshTokenRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.exceptions.TokenRefreshException;
 import com.edward.calculoapi.database.models.RefreshToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ import java.util.UUID;
 
 @Service
 public class RefreshTokenService {
-
+    private final Logger logger = LoggerFactory.getLogger(RefreshTokenService.class);
     @Value("${edward.app.jwtRefreshExpirationMs}")
     private long refreshTokenDuration;
 
@@ -43,6 +45,7 @@ public class RefreshTokenService {
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
+            logger.warn("Token expired {}", token);
             refreshTokenRepository.delete(token);
             throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signin request");
         }

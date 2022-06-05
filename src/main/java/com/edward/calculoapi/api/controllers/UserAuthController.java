@@ -4,7 +4,6 @@ import com.edward.calculoapi.api.dto.requests.CreateAccountRequest;
 import com.edward.calculoapi.api.dto.requests.LogInRequest;
 import com.edward.calculoapi.api.dto.requests.TokenRefreshRequest;
 import com.edward.calculoapi.services.UserAuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +13,11 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class UserAuthController {
+    private final UserAuthService userAuthService;
 
-    @Autowired
-    private UserAuthService userAuthService;
+    public UserAuthController(UserAuthService userAuthService) {
+        this.userAuthService = userAuthService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody LogInRequest logInRequest) {

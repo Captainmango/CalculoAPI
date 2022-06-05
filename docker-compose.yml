@@ -3,7 +3,7 @@ services:
   server:
     image: calculo-api
     ports:
-      - "8080:8080"
+      - "${APP_PORT}:${APP_PORT}"
     networks:
       - calculo-net
     depends_on:
@@ -18,9 +18,9 @@ services:
     networks:
       - calculo-net
     environment:
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=calculo_db
-      - POSTGRES_USER=calculo
+      - POSTGRES_USER=${DB_USERNAME}
 
 networks:
   calculo-net:

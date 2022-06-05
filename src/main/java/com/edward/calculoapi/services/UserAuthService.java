@@ -16,6 +16,8 @@ import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.security.jwt.JwtUtils;
 import com.edward.calculoapi.security.services.RefreshTokenService;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserAuthService {
-
+    private final Logger logger = LoggerFactory.getLogger(UserAuthService.class);
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -83,7 +85,8 @@ public class UserAuthService {
 
     public LogInRequest createUserAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest){
         if (userRepository.existsByEmail(createAccountRequest.getEmail())) {
-           throw new EmailInUseException("Email already in use");
+            logger.warn("User attempted to use email that was already in use. Request: {}", createAccountRequest);
+            throw new EmailInUseException("Email already in use");
         }
 
         User user = new User(
@@ -91,7 +94,7 @@ public class UserAuthService {
                 createAccountRequest.getLastName(),
                 createAccountRequest.getEmail(),
                 encoder.encode(createAccountRequest.getPassword())
-                );
+        );
 
         user.setRoles(setRoleForUser(createAccountRequest));
         userRepository.save(user);

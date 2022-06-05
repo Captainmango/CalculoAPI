@@ -4,6 +4,7 @@ import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
 import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
 import com.edward.calculoapi.api.dto.responses.ExpenseResponse;
 import com.edward.calculoapi.api.mappers.ExpenseMapper;
+import com.edward.calculoapi.security.services.AuthenticationFacade;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import com.edward.calculoapi.services.ExpenseCRUDService;
@@ -21,7 +22,7 @@ public class ExpenseController {
 
     private final ExpenseCRUDService expenseCRUDService;
     private final ExpenseMapper expenseMapper;
-    private final AuthenticationFacadeImpl auth;
+    private final AuthenticationFacade auth;
 
     public ExpenseController(ExpenseCRUDService expenseCRUDService, ExpenseMapper expenseMapper, AuthenticationFacadeImpl auth) {
         this.expenseCRUDService = expenseCRUDService;

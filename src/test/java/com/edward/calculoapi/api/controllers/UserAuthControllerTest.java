@@ -1,4 +1,4 @@
-package com.edward.calculoapi.controllers;
+package com.edward.calculoapi.api.controllers;
 
 import com.edward.calculoapi.api.dto.requests.CreateAccountRequest;
 import com.edward.calculoapi.utils.factories.MockUserFactory;
@@ -55,4 +55,6 @@ public class UserAuthControllerTest {
                         cookie().exists("calculo_token")
                 );
     }
+
+    //@TODO: add another test here for logging in via refresh use mocking
 }

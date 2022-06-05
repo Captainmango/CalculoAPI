@@ -14,6 +14,8 @@ import com.edward.calculoapi.exceptions.ResourceNotFoundErrorException;
 import com.edward.calculoapi.database.models.*;
 import com.edward.calculoapi.security.services.AuthenticationFacadeImpl;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ import java.util.Set;
 
 @Service
 public class ExpenseCRUDService {
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ExpenseRepository expenseRepository;
 
     private final AuthenticationFacadeImpl auth;
@@ -73,6 +75,7 @@ public class ExpenseCRUDService {
 
         Expense expense = expenseRepository.findById(updateExpenseRequest.getId()).orElseThrow();
             if (expense.getUser().getId() != user.getId()) {
+                logger.warn("A user tried to update an expense they cannot. User: {}", user);
                 throw new AuthException("You aren't authorised to edit this transaction");
             }
             expense.setTitle(updateExpenseRequest.getTitle());
@@ -97,6 +100,7 @@ public class ExpenseCRUDService {
         Expense expense = expenseRepository.findById(id).orElseThrow();
 
         if (expense.getUser().getId() != user.getId()) {
+            logger.error("Unable to delete expense. Expense: {} User: {}", expense, user);
             return ResponseEntity.badRequest().body("Transaction not deleted");
         }
 
