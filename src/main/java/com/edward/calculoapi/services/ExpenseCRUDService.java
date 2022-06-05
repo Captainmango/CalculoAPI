@@ -112,6 +112,7 @@ public class ExpenseCRUDService {
     {
         Set<Category> expenseCategories = new HashSet<>();
 
+        //@TODO: Create a category service and start using streams. Also, remove this method as it breaks domain boundaries
         for(String category : categories) {
             for (ECategory categoryType : ECategory.values()) {
                 if (ECategory.exists(category.toUpperCase())) {
