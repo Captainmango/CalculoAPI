@@ -70,10 +70,6 @@ public class ExpenseController {
             @PathVariable long id,
             @Valid @RequestBody UpdateExpenseRequest updateExpenseRequest
     ) {
-        if (id != updateExpenseRequest.getId()) {
-            return ResponseEntity.badRequest().body("Your update request could not be completed.");
-        }
-
         ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.updateExpenseForUser(updateExpenseRequest));
         return ResponseEntity.ok().body(expense);
     }
