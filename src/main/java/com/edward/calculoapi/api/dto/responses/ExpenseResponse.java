@@ -2,7 +2,7 @@ package com.edward.calculoapi.api.dto.responses;
 
 import com.edward.calculoapi.api.dto.shared.CategoryDto;
 import com.edward.calculoapi.api.mappers.CategoryMapper;
-import com.edward.calculoapi.database.models.Expense;
+import com.edward.calculoapi.api.models.Expense;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -14,7 +14,7 @@ public class ExpenseResponse {
     private String title;
     private String notes;
     private float total;
-    private Set<CategoryDto> categories = new HashSet<>();
+    private Set<CategoryDto> categories;
     private Instant createdAt;
     private Instant updatedAt;
 

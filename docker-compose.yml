@@ -7,7 +7,7 @@ services:
     networks:
       - calculo-net
     depends_on:
-      - psql-db
+      - db
 
   db:
     image: postgres:13

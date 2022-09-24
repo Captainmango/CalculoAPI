@@ -1,4 +1,4 @@
-package com.edward.calculoapi.database.models;
+package com.edward.calculoapi.api.models;
 
 import javax.persistence.*;
 import java.time.Instant;

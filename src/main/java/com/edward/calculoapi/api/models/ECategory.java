@@ -1,4 +1,4 @@
-package com.edward.calculoapi.database.models;
+package com.edward.calculoapi.api.models;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,23 +26,22 @@ public enum ECategory {
         this.name = name;
     }
 
-    public static Boolean exists(String name) {
+    public static Boolean exists(String name)
+    {
         if(StringUtils.isBlank(name)) {
             return false;
         }
 
-        for(ECategory categoryType : ECategory.values()) {
-            if(name.toUpperCase().equals(categoryType.name)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(ECategory.values())
+                .anyMatch(category -> category.name.equals(name.toUpperCase()));
     }
 
     public static ECategory getByName(String name)
     {
-        return Arrays.stream(ECategory.values()).filter(
-                eCategory -> eCategory.name.equals(name))
+        return Arrays.stream(ECategory.values())
+                .filter(
+                        eCategory -> eCategory.name.equals(name.toUpperCase())
+                )
                 .findFirst()
                 .orElse(null);
     }

@@ -1,11 +1,12 @@
 package com.edward.calculoapi.utils.fixtures;
 
+import com.edward.calculoapi.api.models.*;
 import com.edward.calculoapi.database.repositories.CategoryRepository;
 import com.edward.calculoapi.database.repositories.RoleRepository;
 import com.edward.calculoapi.database.repositories.ExpenseRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.exceptions.RoleNotValidException;
-import com.edward.calculoapi.database.models.*;
+import com.edward.calculoapi.api.models.*;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -37,11 +38,13 @@ public class DataFixture implements CommandLineRunner {
     PasswordEncoder encoder;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args)
+    {
         createUserData();
     }
 
-    private void createUserData() {
+    private void createUserData()
+    {
         createRolesAndCategories();
         createUsers();
         createExpenses();
@@ -58,7 +61,7 @@ public class DataFixture implements CommandLineRunner {
 
             User user = new User("Edward",
                     "Heaver",
-                    "edward.test@gmail.com",
+                    "admin@calculo.com",
                     encoder.encode("password"));
             user.setRoles(roles);
             userRepository.save(user);
@@ -71,9 +74,9 @@ public class DataFixture implements CommandLineRunner {
                     .orElseThrow(() -> new RoleNotValidException("This is not a valid role"));
             roles.add(adminRole);
 
-            User user = new User("Test2",
-                    "Test2",
-                    "test2.test@gmail.com",
+            User user = new User("User",
+                    "Account",
+                    "user@calculo.com",
                     encoder.encode("password"));
             user.setRoles(roles);
             userRepository.save(user);
@@ -105,31 +108,24 @@ public class DataFixture implements CommandLineRunner {
     {
         if (expenseRepository.count() == 0) {
             User user = userRepository.findById(1L).orElseThrow();
-            for (int i = 0; i<=10; i++) {
-                Expense expense = new Expense(faker.food().fruit(),
+            for (int i = 0; i <= 10; i++) {
+                Expense expense = new Expense(
+                        faker.food().fruit(),
                         faker.gameOfThrones().quote(),
                         (float) faker.number().randomDouble(2,5,15),
-                        user);
-                expense.setCategories(setCategoriesForExpense(Set.of("ENTERTAINMENT")));
+                        user
+                );
+
+                Category category = categoryRepository
+                        .findByName(ECategory.values()[2])
+                        .orElseThrow();
+
+                expense.setCategories(
+                        Set.of(category)
+                );
+
                 expenseRepository.save(expense);
             }
         }
-    }
-
-    private Set<Category> setCategoriesForExpense(Set<String> categories)
-    {
-        Set<Category> expenseCategories = new HashSet<>();
-
-        for(String category : categories) {
-            for (ECategory categoryType : ECategory.values()) {
-                if (ECategory.exists(category.toUpperCase())) {
-                    Category categoryToAdd = categoryRepository.findByName(ECategory.getByName(category)).orElseThrow();
-                    expenseCategories.add(categoryToAdd);
-                }
-                break;
-            }
-        }
-
-        return expenseCategories;
     }
 }

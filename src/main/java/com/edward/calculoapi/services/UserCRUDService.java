@@ -1,7 +1,7 @@
 package com.edward.calculoapi.services;
 
 import com.edward.calculoapi.database.repositories.UserRepository;
-import com.edward.calculoapi.database.models.User;
+import com.edward.calculoapi.api.models.User;
 import com.edward.calculoapi.exceptions.ResourceNotSavedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

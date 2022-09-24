@@ -18,10 +18,9 @@ public class CreateAccountRequest {
     @Size(min=6)
     private String password;
 
-    public CreateAccountRequest(String firstName, String lastName, Set<String> roles, String password, String email) {
+    public CreateAccountRequest(String firstName, String lastName, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.roles = roles;
         this.password = password;
         this.email = email;
     }
@@ -47,12 +46,10 @@ public class CreateAccountRequest {
     }
 
     public Set<String> getRoles() {
-        return roles;
+        return Set.of("USER");
     }
 
-    public void setRoles(Set<String> role) {
-        this.roles = role;
-    }
+    public void setRoles(Set<String> role){}
 
     public String getPassword() {
         return password;

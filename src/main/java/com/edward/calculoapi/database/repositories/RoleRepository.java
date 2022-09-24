@@ -1,7 +1,7 @@
 package com.edward.calculoapi.database.repositories;
 
-import com.edward.calculoapi.database.models.ERole;
-import com.edward.calculoapi.database.models.Role;
+import com.edward.calculoapi.api.models.ERole;
+import com.edward.calculoapi.api.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

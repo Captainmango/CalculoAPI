@@ -31,7 +31,7 @@ public class ExpenseController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/admin/expenses")
+    @GetMapping(path="/admin/expenses", produces="application/json")
     public ResponseEntity<?> adminAllUserExpenses()
     {
         List<ExpenseResponse> expenseResponseList = expenseMapper.expenseListToDto(expenseCRUDService.adminGetAllExpenses());
@@ -41,25 +41,32 @@ public class ExpenseController {
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping(path="/expenses", produces="application/json")
-    public ResponseEntity<?> getAllCurrentUserExpenses() {
-        UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
-        List<ExpenseResponse> expenses = expenseMapper.expenseListToDto(expenseCRUDService.getAllExpensesForUser(currentUser.getEmail()));
+    public ResponseEntity<?> getAllCurrentUserExpenses()
+    {
+        var currentUser = (UserDetailsImpl) auth.getCurrentUser();
+        List<ExpenseResponse> expenses = expenseMapper
+                .expenseListToDto(
+                    expenseCRUDService.getAllExpensesForUser(currentUser.getEmail())
+                );
 
         return ResponseEntity.ok(expenses);
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PostMapping(path="/expenses")
+    @PostMapping(path="/expenses", produces="application/json")
     public ResponseEntity<?> createExpenseForLoggedInUser(
             @Valid @RequestBody CreateExpenseRequest createExpenseRequest
     ) {
-        ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.createExpenseForUser(createExpenseRequest));
-        return ResponseEntity.accepted().body(expense);
+        ExpenseResponse expense = expenseMapper
+                .expenseToDto(
+                    expenseCRUDService.createExpenseForUser(createExpenseRequest)
+                );
+        return ResponseEntity.ok().body(expense);
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PatchMapping(path = "/expenses/{id}")
-    public ResponseEntity<?> updateExpenseForUser (
+    @PatchMapping(path = "/expenses/{id}", produces="application/json")
+    public ResponseEntity<?> updateExpenseForUser(
             @PathVariable long id,
             @Valid @RequestBody UpdateExpenseRequest updateExpenseRequest
     ) {
@@ -68,12 +75,12 @@ public class ExpenseController {
         }
 
         ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.updateExpenseForUser(updateExpenseRequest));
-        return ResponseEntity.accepted().body(expense);
+        return ResponseEntity.ok().body(expense);
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @GetMapping(path = "/expenses/{id}")
-    public ResponseEntity<?> getExpenseForUser (
+    @GetMapping(path = "/expenses/{id}", produces="application/json")
+    public ResponseEntity<?> getExpenseForUser(
             @PathVariable long id
     ) {
         ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.geExpenseForUserById(id));
@@ -81,8 +88,8 @@ public class ExpenseController {
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @DeleteMapping(path = "/expenses/{id}")
-    public ResponseEntity<?> deleteExpenseForUser (
+    @DeleteMapping(path = "/expenses/{id}", produces="application/json")
+    public ResponseEntity<?> deleteExpenseForUser(
             @PathVariable long id
     ) {
         return expenseCRUDService.deleteExpenseForUserById(id);

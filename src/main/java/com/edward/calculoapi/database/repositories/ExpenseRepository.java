@@ -1,7 +1,7 @@
 package com.edward.calculoapi.database.repositories;
 
-import com.edward.calculoapi.database.models.Expense;
-import com.edward.calculoapi.database.models.User;
+import com.edward.calculoapi.api.models.Expense;
+import com.edward.calculoapi.api.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

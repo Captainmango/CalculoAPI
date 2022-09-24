@@ -7,7 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
 import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
-import com.edward.calculoapi.database.models.Expense;
+import com.edward.calculoapi.api.models.Category;
+import com.edward.calculoapi.api.models.Expense;
 import com.edward.calculoapi.utils.factories.MockExpenseFactory;
 import com.edward.calculoapi.utils.factories.MockUserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -92,7 +94,7 @@ public class ExpenseControllerTest {
                 .content(requestJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
-                status().isAccepted(),
+                status().isOk(),
                 content().contentType(MediaType.APPLICATION_JSON)
         );
     }
@@ -118,7 +120,7 @@ public class ExpenseControllerTest {
                         .content(requestJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
-                        status().isAccepted(),
+                        status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         MockMvcResultMatchers.jsonPath("$.categories[0]", hasValue("CATEGORY_GENERAL"))
         );

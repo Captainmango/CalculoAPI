@@ -20,18 +20,24 @@ public class UserAuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody LogInRequest logInRequest) {
+    public ResponseEntity<?> loginUser(
+            @Valid @RequestBody LogInRequest logInRequest
+    ) {
         return userAuthService.loginUser(logInRequest);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody CreateAccountRequest createAccountRequest) {
+    public ResponseEntity<?> registerUser(
+            @Valid @RequestBody CreateAccountRequest createAccountRequest
+    ) {
         LogInRequest request = userAuthService.createUserAccount(createAccountRequest);
         return userAuthService.loginUser(request);
     }
 
     @PostMapping("/refreshtoken")
-    public ResponseEntity<?> loginWithRefresh(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
+    public ResponseEntity<?> loginWithRefresh(
+            @Valid @RequestBody TokenRefreshRequest tokenRefreshRequest
+    ) {
         return userAuthService.loginWithRefresh(tokenRefreshRequest);
     }
 

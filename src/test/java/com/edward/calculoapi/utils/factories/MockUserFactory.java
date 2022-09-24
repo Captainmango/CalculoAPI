@@ -3,9 +3,9 @@ package com.edward.calculoapi.utils.factories;
 import com.edward.calculoapi.database.repositories.RoleRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.exceptions.RoleNotValidException;
-import com.edward.calculoapi.database.models.ERole;
-import com.edward.calculoapi.database.models.Role;
-import com.edward.calculoapi.database.models.User;
+import com.edward.calculoapi.api.models.ERole;
+import com.edward.calculoapi.api.models.Role;
+import com.edward.calculoapi.api.models.User;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import com.edward.calculoapi.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class MockUserFactory {
 
     public UserDetailsImpl makeMockUser()
     {
-        User user = new User("test", "test", "test2@test2.com", "password");
+        User user = new User("user", "account", "user@calculotest.com", "password");
         if (userRepository.existsByEmail(user.getEmail())) {
             return (UserDetailsImpl) userDetailsService.loadUserByUsername(user.getEmail());
         }
@@ -44,7 +44,7 @@ public class MockUserFactory {
 
     public UserDetailsImpl makeMockAdmin()
     {
-        User user = new User("test2", "test2", "test3@test3.com", "password");
+        User user = new User("admin", "account", "admin@calculotest.com", "password");
         if (userRepository.existsByEmail(user.getEmail())) {
             return (UserDetailsImpl) userDetailsService.loadUserByUsername(user.getEmail());
         }

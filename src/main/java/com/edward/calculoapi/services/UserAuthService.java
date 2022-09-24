@@ -7,10 +7,10 @@ import com.edward.calculoapi.api.dto.responses.LogInResponse;
 import com.edward.calculoapi.exceptions.EmailInUseException;
 import com.edward.calculoapi.exceptions.RoleNotValidException;
 import com.edward.calculoapi.exceptions.TokenRefreshException;
-import com.edward.calculoapi.database.models.ERole;
-import com.edward.calculoapi.database.models.RefreshToken;
-import com.edward.calculoapi.database.models.Role;
-import com.edward.calculoapi.database.models.User;
+import com.edward.calculoapi.api.models.ERole;
+import com.edward.calculoapi.api.models.RefreshToken;
+import com.edward.calculoapi.api.models.Role;
+import com.edward.calculoapi.api.models.User;
 import com.edward.calculoapi.database.repositories.RoleRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
 import com.edward.calculoapi.security.jwt.JwtUtils;
@@ -56,18 +56,21 @@ public class UserAuthService {
         this.jwtUtils = jwtUtils;
     }
 
-    public ResponseEntity<LogInResponse> loginUser(@Valid @RequestBody LogInRequest loginRequest){
+    public ResponseEntity<LogInResponse> loginUser(
+            @Valid @RequestBody LogInRequest loginRequest
+    ) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(authentication);
         String jwtToken = jwtUtils.generateJwtToken(authentication);
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
@@ -94,7 +97,13 @@ public class UserAuthService {
                 encoder.encode(createAccountRequest.getPassword())
         );
 
-        user.setRoles(setRoleForUser(createAccountRequest));
+        var roles = createAccountRequest.getRoles().stream()
+                .map(ERole::getByName)
+                .map(eRole -> roleRepository.findByName(eRole).orElseThrow())
+                .collect(Collectors.toSet());
+
+        user.setRoles(roles);
+
         userRepository.save(user);
 
         return new LogInRequest(
@@ -124,31 +133,5 @@ public class UserAuthService {
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));
-    }
-
-    private Set<Role> setRoleForUser(CreateAccountRequest createAccountRequest){
-        Set<Role> roles = new HashSet<>();
-
-        if(createAccountRequest.getRoles().contains("user")) {
-            Role adminRole = roleRepository
-                    .findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RoleNotValidException("This is not a valid role"));
-            roles.add(adminRole);
-        }
-
-        return roles;
-    }
-
-    private Set<Role> setAdminRoleForUser(CreateAccountRequest createAccountRequest){
-        Set<Role> roles = new HashSet<>();
-
-        if(createAccountRequest.getRoles().contains("admin")) {
-            Role adminRole = roleRepository
-                    .findByName(ERole.ROLE_ADMIN)
-                    .orElseThrow(() -> new RoleNotValidException("This is not a valid role"));
-            roles.add(adminRole);
-        }
-
-        return roles;
     }
 }

@@ -1,6 +1,6 @@
 package com.edward.calculoapi.sevices;
 
-import com.edward.calculoapi.database.models.User;
+import com.edward.calculoapi.api.models.User;
 import com.edward.calculoapi.services.UserCRUDService;
 import com.edward.calculoapi.utils.factories.MockUserFactory;
 import org.junit.jupiter.api.Assertions;
