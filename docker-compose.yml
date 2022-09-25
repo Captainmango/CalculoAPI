@@ -3,18 +3,18 @@ services:
   server:
     image: calculo-api
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - "${PORT}:${PORT}"
     networks:
       - calculo-net
     depends_on:
       - db
     environment:
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_USERNAME=${DB_USERNAME}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
       - APP_SECRET=${APP_SECRET}
       - APP_REQUEST_ORIGIN=${APP_REQUEST_ORIGIN}
-      - APP_PORT=${APP_PORT:-8080}
+      - PORT=${PORT:-8080}
 
   db:
     image: postgres:13
@@ -25,9 +25,9 @@ services:
     networks:
       - calculo-net
     environment:
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+      - POSTGRES_USER=${PGUSER}
 
 networks:
   calculo-net:
