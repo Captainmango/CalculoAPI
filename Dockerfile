@@ -12,6 +12,6 @@ ENV APP_PORT=$APP_PORT
 ENV APP_SECRET=$APP_SECRET
 ENV APP_REQUEST_ORIGIN=$APP_REQUEST_ORIGIN
 
-RUN ./mvn -Dmaven.test.skip=true install
+RUN mvn -Dmaven.test.skip=true install
 COPY ./target/calculo-api-*.jar calculo-api-*.jar
 CMD ["java", "-jar", "calculo-api-1.0.0.jar"]
