@@ -2,13 +2,10 @@ package com.edward.calculoapi.services;
 
 import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
 import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
+import com.edward.calculoapi.api.models.*;
 import com.edward.calculoapi.database.repositories.CategoryRepository;
 import com.edward.calculoapi.database.repositories.ExpenseRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
-import com.edward.calculoapi.api.models.Category;
-import com.edward.calculoapi.api.models.ECategory;
-import com.edward.calculoapi.api.models.Expense;
-import com.edward.calculoapi.api.models.User;
 import com.edward.calculoapi.exceptions.AuthException;
 import com.edward.calculoapi.exceptions.ResourceNotFoundErrorException;
 import com.edward.calculoapi.security.services.AuthenticationFacade;
@@ -67,20 +64,36 @@ public class ExpenseCRUDService {
         return expenseRepository.save(expense);
     }
 
-    public Expense updateExpenseForUser(UpdateExpenseRequest updateExpenseRequest)
+    public Expense updateExpenseForUser(long id, UpdateExpenseRequest updateExpenseRequest)
     {
         UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
-        User user = userRepository.findById(currentUser.getId()).orElseThrow();
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(
+                        () -> {
+                            logger.error("[ExpenseCRUDService@updateExpenseForUser] failed to find user. " +
+                                    "User ID: {}", currentUser.getId());
+                            return new UsernameNotFoundException("No user found for this ID");
+                        }
+                );
 
-        Expense expense = expenseRepository.findById(updateExpenseRequest.getId()).orElseThrow();
-            if (expense.getUser().getId() != user.getId()) {
-                logger.warn("A user tried to update an expense they cannot. User: {}", user);
-                throw new AuthException("You aren't authorised to edit this transaction");
-            }
-            expense.setTitle(updateExpenseRequest.getTitle());
-            expense.setNotes(updateExpenseRequest.getNotes());
-            expense.setTotal(updateExpenseRequest.getTotal());
-            expense.setCategories(setCategoriesForExpense(updateExpenseRequest.getCategories()));
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(
+                        () -> {
+                            logger.error("[ExpenseCRUDService@updateExpenseForUser] failed to find expense" +
+                                    "Expense ID: {}", updateExpenseRequest.getId());
+                            return new ResourceNotFoundErrorException("No expense for this ID");
+                        }
+                );
+
+        if (expense.getUser().getId() != user.getId()) {
+            logger.warn("A user tried to update an expense they cannot. User: {}", user);
+            throw new AuthException("You aren't authorised to edit this transaction");
+        }
+
+        expense.setTitle(updateExpenseRequest.getTitle());
+        expense.setNotes(updateExpenseRequest.getNotes());
+        expense.setTotal(updateExpenseRequest.getTotal());
+        expense.setCategories(setCategoriesForExpense(updateExpenseRequest.getCategories()));
 
         return expenseRepository.saveAndFlush(expense);
     }

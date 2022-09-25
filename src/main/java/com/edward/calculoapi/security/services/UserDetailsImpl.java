@@ -45,7 +45,8 @@ public class UserDetailsImpl implements UserDetails {
                 user.getFirstName(),
                 user.getEmail(),
                 user.getPasswordDigest(),
-                authorities);
+                authorities
+        );
     }
 
     @Override
