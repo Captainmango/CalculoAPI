@@ -4,7 +4,6 @@ import com.edward.calculoapi.api.dto.requests.CreateExpenseRequest;
 import com.edward.calculoapi.api.dto.requests.UpdateExpenseRequest;
 import com.edward.calculoapi.api.dto.responses.ExpenseResponse;
 import com.edward.calculoapi.api.mappers.ExpenseMapper;
-import com.edward.calculoapi.exceptions.ResourceUpdateErrorException;
 import com.edward.calculoapi.security.services.AuthenticationFacade;
 import com.edward.calculoapi.security.services.UserDetailsImpl;
 import com.edward.calculoapi.services.ExpenseCRUDService;
@@ -15,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "${edward.app.requestOrigin}", maxAge = 3600)
@@ -39,14 +37,7 @@ public class ExpenseController {
     @GetMapping(path="/admin/expenses", produces="application/json")
     public ResponseEntity<?> adminAllUserExpenses()
     {
-        List<ExpenseResponse> expenseResponseList = new ArrayList<>();
-
-        try {
-            expenseResponseList = expenseMapper.expenseListToDto(expenseCRUDService.adminGetAllExpenses());
-        } catch(Exception e) {
-            logger.error("message: {}", e.getMessage());
-            throw new ResourceUpdateErrorException("failed to update expense");
-        }
+        List<ExpenseResponse> expenseResponseList = expenseMapper.expenseListToDto(expenseCRUDService.adminGetAllExpenses());
 
         return ResponseEntity.ok(expenseResponseList);
     }
@@ -91,7 +82,7 @@ public class ExpenseController {
     public ResponseEntity<?> getExpenseForUser(
             @PathVariable long id
     ) {
-        ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.geExpenseForUserById(id));
+        ExpenseResponse expense = expenseMapper.expenseToDto(expenseCRUDService.getExpenseForUserById(id));
         return ResponseEntity.ok().body(expense);
     }
 

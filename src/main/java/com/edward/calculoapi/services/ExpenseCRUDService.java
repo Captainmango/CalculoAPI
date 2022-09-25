@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ExpenseCRUDService {
@@ -45,14 +45,27 @@ public class ExpenseCRUDService {
 
     public List<Expense> getAllExpensesForUser(String email)
     {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No user found for this ID"));
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> {
+                    logger.error("[ExpenseCRUDService@getAllExpensesForUser] user does not exist by email" +
+                            "email: {}", email);
+                    return new UsernameNotFoundException("No user found");
+                }
+        );
+
         return expenseRepository.findByUserIs(user);
     }
 
     public Expense createExpenseForUser(CreateExpenseRequest createExpenseRequest)
     {
         UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
-        User user = userRepository.findById(currentUser.getId()).orElseThrow();
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(
+                () -> {
+                    logger.error("[ExpenseCRUDService@getAllExpensesForUser] user does not exist by ID. " +
+                            "ID: {}", currentUser.getId());
+                    return new UsernameNotFoundException("No user found for this ID");
+                }
+        );
 
         Expense expense = new Expense(
                 createExpenseRequest.getTitle(),
@@ -60,7 +73,12 @@ public class ExpenseCRUDService {
                 createExpenseRequest.getTotal(),
                 user
         );
-        expense.setCategories(setCategoriesForExpense(createExpenseRequest.getCategories()));
+
+        var categories = findAllCategories(createExpenseRequest.getCategories());
+
+        // @TODO: Look at using the flyweight or proxy pattern here. DB access for this is deffo overkill
+        expense.setCategories(categoryRepository.findByNameIn(categories));
+
         return expenseRepository.save(expense);
     }
 
@@ -93,15 +111,21 @@ public class ExpenseCRUDService {
         expense.setTitle(updateExpenseRequest.getTitle());
         expense.setNotes(updateExpenseRequest.getNotes());
         expense.setTotal(updateExpenseRequest.getTotal());
-        expense.setCategories(setCategoriesForExpense(updateExpenseRequest.getCategories()));
+
+        // @TODO: Look at using the flyweight or proxy pattern here. DB access for this is deffo overkill
+        expense.setCategories(categoryRepository.findByNameIn(findAllCategories(updateExpenseRequest.getCategories())));
 
         return expenseRepository.saveAndFlush(expense);
     }
 
-    public Expense geExpenseForUserById(long id)
+    public Expense getExpenseForUserById(long id)
     {
         return expenseRepository.findById(id).orElseThrow(
-            () -> new ResourceNotFoundErrorException("Cannot find expense with id " + id)
+            () -> {
+                logger.error("[ExpenseCRUDService@getExpenseForUserById] cannot find expense by ID. " +
+                        "ID: {}", id);
+                return new ResourceNotFoundErrorException("Cannot find expense with id " + id);
+            }
         );
     }
 
@@ -109,8 +133,20 @@ public class ExpenseCRUDService {
     {
         //@TODO: fix the leaky abstraction. Use the UserCRUDService instead of the repo
         UserDetailsImpl currentUser = (UserDetailsImpl) auth.getCurrentUser();
-        User user = userRepository.findById(currentUser.getId()).orElseThrow();
-        Expense expense = expenseRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(
+                () -> {
+                    logger.error("[ExpenseCRUDService@getAllExpensesForUser] user does not exist by ID. " +
+                            "ID: {}", currentUser.getId());
+                    return new UsernameNotFoundException("No user found for this ID");
+                }
+        );
+        Expense expense = expenseRepository.findById(id).orElseThrow(
+                () -> {
+                    logger.error("[ExpenseCRUDService@updateExpenseForUser] failed to find expense" +
+                            "Expense ID: {}", id);
+                    return new ResourceNotFoundErrorException("No expense for this ID");
+                }
+        );
 
         if (expense.getUser().getId() != user.getId()) {
             logger.error("Unable to delete expense. Expense: {} User: {}", expense, user);
@@ -121,21 +157,11 @@ public class ExpenseCRUDService {
         return ResponseEntity.ok().body("Transaction with id " + expense.getId() + " has been deleted");
     }
 
-    private Set<Category> setCategoriesForExpense(Set<String> categories)
+    // @TODO: move this out into a category service flyweight thingy
+    private List<ECategory> findAllCategories(Set<String> categories)
     {
-        Set<Category> expenseCategories = new HashSet<>();
-
-        //@TODO: Create a category service and start using streams. Also, remove this method as it breaks domain boundaries
-        for(String category : categories) {
-            for (ECategory categoryType : ECategory.values()) {
-                if (ECategory.exists(category.toUpperCase())) {
-                    Category categoryToAdd = categoryRepository.findByName(ECategory.getByName(category)).orElseThrow();
-                    expenseCategories.add(categoryToAdd);
-                }
-                break;
-            }
-        }
-
-        return expenseCategories;
+        return categories.stream()
+                .map(ECategory::getByName)
+                .collect(Collectors.toList());
     }
 }

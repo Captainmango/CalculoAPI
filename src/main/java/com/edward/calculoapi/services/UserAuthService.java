@@ -5,11 +5,9 @@ import com.edward.calculoapi.api.dto.requests.LogInRequest;
 import com.edward.calculoapi.api.dto.requests.TokenRefreshRequest;
 import com.edward.calculoapi.api.dto.responses.LogInResponse;
 import com.edward.calculoapi.exceptions.EmailInUseException;
-import com.edward.calculoapi.exceptions.RoleNotValidException;
 import com.edward.calculoapi.exceptions.TokenRefreshException;
 import com.edward.calculoapi.api.models.ERole;
 import com.edward.calculoapi.api.models.RefreshToken;
-import com.edward.calculoapi.api.models.Role;
 import com.edward.calculoapi.api.models.User;
 import com.edward.calculoapi.database.repositories.RoleRepository;
 import com.edward.calculoapi.database.repositories.UserRepository;
@@ -24,16 +22,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,7 +125,10 @@ public class UserAuthService {
                                     jwt
                             ));
                 })
-                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
-                        "Refresh token is not in database!"));
+                .orElseThrow(() -> {
+                    logger.error("[UserAuthService@loginWithRefresh] attempt to use token that does not exist " +
+                            "Token: {}", requestRefreshToken);
+                    return new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!");
+                });
     }
 }

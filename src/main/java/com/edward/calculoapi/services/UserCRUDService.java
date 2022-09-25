@@ -21,8 +21,10 @@ public class UserCRUDService {
     {
         return userRepository.findById(userId)
                 .orElseThrow(
-                        () ->
-                            new UsernameNotFoundException("User not found for this ID.")
+                        () -> {
+                            logger.error("Failed to find user ID: {}", userId);
+                            return new UsernameNotFoundException("User not found for this ID.");
+                        }
                 );
     }
 

@@ -41,6 +41,7 @@ public class RefreshTokenService {
                     return new UsernameNotFoundException("Could not find user");
                 }
         );
+
         RefreshToken refreshToken = new RefreshToken(
                 user,
                 UUID.randomUUID().toString(),
