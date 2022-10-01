@@ -128,12 +128,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<profiles>
-						<!--suppress UnresolvedMavenProperty -->
-						<profile>${env.ENVIRONMENT}</profile>
-					</profiles>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.flywaydb</groupId>
