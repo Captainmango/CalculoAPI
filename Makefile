@@ -8,12 +8,12 @@ MVN_TEST ?= ${MVN} test
 # build API image
 build:
 		${MVN_BUILD}
-		${DOCKER} image build -t calculo-api .
+		${DOCKER} build -t calculo-api -f build/localdev/Dockerfile .
 
 # build image and start docker container
 build-up:
 		${MVN_BUILD}
-		${DOCKER} image build -t calculo-api .
+		${DOCKER} build -t calculo-api -f build/localdev/Dockerfile .
 		${COMPOSE} up --detach
 
 # stop docker container
@@ -36,5 +36,5 @@ check:
 # clean build and test image
 build-test-up:
 		${MVN_TEST_BUILD}
-		${DOCKER} image build -t calculo-api .
+		${DOCKER} build -t calculo-api -f build/localdev/Dockerfile .
 		${COMPOSE} up --detach

@@ -128,15 +128,24 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<profiles>
+						<!--suppress UnresolvedMavenProperty -->
+						<profile>${env.ENVIRONMENT}</profile>
+					</profiles>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 				<version>7.0.0</version>
 				<configuration>
-					<url>jdbc:postgresql://localhost:5432/calculo_db</url>
-					<user>calculo</user>
-					<password>admin</password>
+					<!--suppress UnresolvedMavenProperty -->
+					<url>jdbc:postgresql://${env.PGHOST}:${env.PGPORT}/${env.PGDATABASE}</url>
+					<!--suppress UnresolvedMavenProperty -->
+					<user>${env.PGUSER}</user>
+					<!--suppress UnresolvedMavenProperty -->
+					<password>${env.PGPASSWORD}</password>
 				</configuration>
 			</plugin>
 		</plugins>
