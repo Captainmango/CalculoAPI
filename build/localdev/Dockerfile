@@ -6,7 +6,7 @@ COPY pom.xml /app
 RUN mvn -f /app/pom.xml clean package -DskipTests
 
 # Set up env and build the container
-FROM openjdk:11
+FROM eclipse-temurin:11
 
 COPY --from=maven-build /app/target/calculo-api-1.0.0.jar /web-app/calculo-api-1.0.0.jar
 WORKDIR /web-app

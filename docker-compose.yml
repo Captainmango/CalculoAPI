@@ -33,6 +33,7 @@ services:
 
 networks:
   calculo-net:
+    driver: bridge
 
 volumes:
   pgdata:
