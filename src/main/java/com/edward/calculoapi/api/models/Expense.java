@@ -9,12 +9,12 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name="transaction")
-@Table(name="transactions")
+@Entity(name="expense")
+@Table(name="expenses")
 public class Expense {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name="id",
             nullable = false,
@@ -48,8 +48,8 @@ public class Expense {
     private User user;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(	name = "transaction_categories",
-            joinColumns = @JoinColumn(name = "transaction_id"),
+    @JoinTable(	name = "expense_categories",
+            joinColumns = @JoinColumn(name = "expense_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 

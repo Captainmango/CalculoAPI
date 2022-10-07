@@ -16,7 +16,7 @@ import java.util.Set;
 @Table(name="users")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name="id",
             updatable = false,
